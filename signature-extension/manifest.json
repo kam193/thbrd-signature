@@ -4,7 +4,8 @@
   "version": "1",
   "applications": {
     "gecko": {
-      "id": "signature@thunderbird.extensions.kam193"
+      "id": "signature@thunderbird.extensions.kam193",
+      "strict_min_version": "79.0a1"
     }
   },
   "background": {
