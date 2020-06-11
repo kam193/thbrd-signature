@@ -8,11 +8,16 @@
     }
   },
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["background.js", "authorize.js"]
   },
   "permissions": [
-    "accountsRead"
+    "accountsRead",
+    "identity",
+    "*://www.googleapis.com/*"
   ],
+  "options_ui": {
+    "page": "options.html"
+  },
   "experiment_apis": {
     "signatureApi": {
       "schema": "schema.json",
