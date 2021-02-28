@@ -1,0 +1,3 @@
+[submodule "dependencies/addon-developer-support"]
+	path = dependencies/addon-developer-support
+	url = git@github.com:thundernest/addon-developer-support.git

@@ -1,0 +1,1 @@
+../../dependencies/addon-developer-support/scripts/preferences/preferences.js

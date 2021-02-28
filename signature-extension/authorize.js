@@ -9,6 +9,7 @@ const AUTH_URL =
 `https://accounts.google.com/o/oauth2/auth\
 ?client_id=${CLIENT_ID}\
 &response_type=token\
+&prompt=select_account\
 &redirect_uri=${encodeURIComponent(REDIRECT_URL)}\
 &scope=${encodeURIComponent(SCOPES.join(' '))}`;
 const VALIDATION_BASE_URL="https://www.googleapis.com/oauth2/v3/tokeninfo";

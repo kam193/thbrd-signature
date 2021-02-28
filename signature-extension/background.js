@@ -1,11 +1,12 @@
 browser.browserAction.onClicked.addListener(async () => {
   accounts = await browser.accounts.list();
-  identity_id = accounts[0].identities[0].id;
+  console.log(accounts);
+  identity_id = accounts[1].identities[0].id;
 
   let signature = await getUserSignature();
+  console.log(signature);
 
   await browser.signatureApi.setSignatureHTML(identity_id, signature);
-  console.log(await browser.signatureApi.getSignature(identity_id));
 });
 
 async function getUserSignature() {
@@ -18,3 +19,11 @@ async function getUserSignature() {
   });
   return signature;
 }
+
+let defaultPreferences = {
+  syncAccounts: {},
+};
+
+(async function () {
+  await preferences.init(defaultPreferences);
+})();

@@ -9,13 +9,9 @@
     }
   },
   "background": {
-    "scripts": ["background.js", "authorize.js"]
+    "page": "background.html"
   },
-  "permissions": [
-    "accountsRead",
-    "identity",
-    "*://www.googleapis.com/*"
-  ],
+  "permissions": ["accountsRead", "identity", "storage", "*://www.googleapis.com/*"],
   "options_ui": {
     "page": "options.html",
     "open_in_tab": false,
@@ -25,14 +21,8 @@
     "signatureApi": {
       "schema": "schema.json",
       "parent": {
-        "scopes": [
-          "addon_parent"
-        ],
-        "paths": [
-          [
-            "signatureApi"
-          ]
-        ],
+        "scopes": ["addon_parent"],
+        "paths": [["signatureApi"]],
         "script": "implementation.js"
       }
     }
