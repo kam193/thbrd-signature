@@ -1,0 +1,53 @@
+body {
+    font-family: 'Fira Sans';
+    font-size: 14px;
+	line-height: 1.5;
+	margin: 0 0 1rem;
+}
+
+h1 {
+    font-size: 20px;
+    font-weight: 300;
+    margin: 1rem 0 0;
+}
+
+h2 {
+    font-size: 16px;
+    font-weight: 300;
+    margin: 1rem 0 0;
+}
+
+h3 {
+	font-size: 13px;
+	font-weight: 600;
+	margin: 1rem 0 0;
+}
+
+.nobottom {
+    margin-bottom: 0;
+}
+
+.login {
+    justify-content: flex-end;
+    margin-right: 0.5em;
+}
+
+.login > button {
+    border-radius: 2px;
+}
+
+.panel-list-item {
+    margin: 3px 0;
+}
+
+button.browser-style:disabled {
+  background-color: #fbfbfb;
+  border: 1px solid #b1b1b1;
+  box-shadow: 0 0 0 0 transparent;
+  font: caption;
+  height: 24px;
+  outline: 0 !important;
+  padding: 0 8px 0;
+  transition-duration: 250ms;
+  transition-property: box-shadow, border;
+}

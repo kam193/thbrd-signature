@@ -5,7 +5,7 @@
   "applications": {
     "gecko": {
       "id": "signature@thunderbird.extensions.kam193",
-      "strict_min_version": "79.0a1"
+      "strict_min_version": "78.4"
     }
   },
   "background": {
@@ -17,7 +17,9 @@
     "*://www.googleapis.com/*"
   ],
   "options_ui": {
-    "page": "options.html"
+    "page": "options.html",
+    "open_in_tab": false,
+    "browser_style": true
   },
   "experiment_apis": {
     "signatureApi": {
