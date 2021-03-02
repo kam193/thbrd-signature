@@ -1,10 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "Manipulate your signature",
-  "version": "1",
+  "name": "Signature sync for Gmail",
+  "version": "1.0.0",
   "applications": {
     "gecko": {
-      "id": "signature@thunderbird.extensions.kam193",
+      "id": "signature-sync@thunderbird.extensions.kam193",
       "strict_min_version": "78.4"
     }
   },
