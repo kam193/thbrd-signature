@@ -3,16 +3,18 @@
 /* exported getAccessToken */
 
 const REDIRECT_URL = browser.identity.getRedirectURL();
-const CLIENT_ID = "";
+const CLIENT_ID = "768560355169-7unkk4krbse12mcnathr6gp8dn8prrk4.apps.googleusercontent.com";
 const SCOPES = ["openid", "email", "profile", "https://www.googleapis.com/auth/gmail.settings.basic"];
 const AUTH_URL =
 `https://accounts.google.com/o/oauth2/auth\
 ?client_id=${CLIENT_ID}\
 &response_type=token\
-&prompt=select_account\
 &redirect_uri=${encodeURIComponent(REDIRECT_URL)}\
 &scope=${encodeURIComponent(SCOPES.join(' '))}`;
 const VALIDATION_BASE_URL="https://www.googleapis.com/oauth2/v3/tokeninfo";
+
+// &prompt=select_account\
+// &login_hint=kam193@windowslive.com\
 
 function extractAccessToken(redirectUri) {
   let m = redirectUri.match(/[#?](.*)/);

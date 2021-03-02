@@ -1,0 +1,1 @@
+../../dependencies/webextensions-examples/google-userinfo/background/authorize.js

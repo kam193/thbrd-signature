@@ -1,3 +1,6 @@
 [submodule "dependencies/addon-developer-support"]
 	path = dependencies/addon-developer-support
 	url = git@github.com:thundernest/addon-developer-support.git
+[submodule "dependencies/webextensions-examples"]
+	path = dependencies/webextensions-examples
+	url = git@github.com:mdn/webextensions-examples.git

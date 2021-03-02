@@ -1,3 +1,5 @@
+
+
 browser.browserAction.onClicked.addListener(async () => {
   accounts = await browser.accounts.list();
   console.log(accounts);
@@ -6,7 +8,7 @@ browser.browserAction.onClicked.addListener(async () => {
   let signature = await getUserSignature();
   console.log(signature);
 
-  await browser.signatureApi.setSignatureHTML(identity_id, signature);
+  // await browser.signatureApi.setSignatureHTML(identity_id, signature);
 });
 
 async function getUserSignature() {

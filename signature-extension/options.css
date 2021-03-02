@@ -30,24 +30,62 @@ h3 {
 .login {
     justify-content: flex-end;
     margin-right: 0.5em;
-}
-
-.login > button {
-    border-radius: 2px;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
 .panel-list-item {
     margin: 3px 0;
+    height: auto;
+    flex-wrap: wrap;
 }
 
-button.browser-style:disabled {
-  background-color: #fbfbfb;
-  border: 1px solid #b1b1b1;
-  box-shadow: 0 0 0 0 transparent;
-  font: caption;
-  height: 24px;
-  outline: 0 !important;
-  padding: 0 8px 0;
-  transition-duration: 250ms;
-  transition-property: box-shadow, border;
+.panel-list-item:hover{
+    border: 0;
+}
+
+.notice {
+    flex-basis: 100%;
+    padding-left: 26px;
+    font-size: .847em;
+    color: #808080;
+}
+
+.button-line {
+    margin: 0 auto;
+}
+
+button {
+    box-shadow: 0 0 0 0 transparent;
+    border-radius: 2px;
+    height: 24px;
+    padding: 0 8px;
+    font-size: 11px;
+    background-color: rgba(12, 12, 13, 0.1);
+    border: 0;
+    color: #0c0c0d;
+    font-weight: 400;
+}
+
+button.big {
+    height: 32px;
+    min-width: 132px;
+    font-size: 13px;
+    text-align: center;
+}
+
+button:hover {
+    background-color: rgba(12, 12, 13, 0.2);
+}
+
+button:active {
+    background-color: rgba(12, 12, 13, 0.3);
+}
+
+button:focus {
+    box-shadow: 0 0 0 1px #0a84ff inset, 0 0 0 1px #0a84ff, 0 0 0 4px rgba(10, 132, 255, 0.3)
+}
+
+button:disabled {
+    opacity: 40%;
 }

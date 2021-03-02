@@ -1,8 +1,10 @@
-function AccountSyncable(accountId, syncEnabled, lastSync, accessToken) {
+function AccountSyncable(accountId, syncEnabled, lastSync, gmailId, gmailEmail, lastError) {
   this.accountId = accountId;
   this.syncEnabled = syncEnabled;
   this.lastSync = lastSync;
-  this.accessToken = accessToken;
+  this.gmailId = gmailId;
+  this.gmailEmail = gmailEmail;
+  this.lastError = lastError;
 }
 
 function getOrCreateAccountSyncable(account_id) {
@@ -34,6 +36,8 @@ async function loadAccountList() {
     line.setAttribute("account-name", acc.name);
     line.setAttribute("last-sync", syncable.lastSync);
     line.setAttribute("account-id", acc.id);
+    if (syncable.gmailEmail) line.setAttribute("gmail-email", syncable.gmailEmail);
+    if (syncable.lastError) line.setAttribute("last-error", syncable.lastError);
     listPlaceholder.appendChild(line);
   };
 
@@ -65,7 +69,7 @@ class AccountLine extends HTMLDivElement {
     let loginContainer = document.createElement("div");
     loginContainer.classList.add("login");
     this.login = document.createElement("button");
-    this.login.classList.add("nobottom", "browser-style");
+    this.login.classList.add("nobottom");
     this.login.textContent = "connect";
     this.login.addEventListener("click", async (_) => {
       await this.connectButtonClicked();
@@ -76,17 +80,25 @@ class AccountLine extends HTMLDivElement {
     this.lastSync = document.createElement("div");
     this.lastSync.classList.add("text-shortcut");
     this.appendChild(this.lastSync);
+
+    this.notice = document.createElement("div");
+    this.notice.classList.add("notice");
+    this.appendChild(this.notice);
   }
 
   render() {
     let syncEnabled = this.getAttribute("sync-enabled") === "true";
     let accountName = this.getAttribute("account-name");
     let lastSync = this.getAttribute("last-sync");
+    let gmailEmail = this.getAttribute("gmail-email");
+    let lastError = this.getAttribute("last-error");
 
     this.checkbox.checked = syncEnabled;
     this.accountName.textContent = accountName;
     this.login.disabled = !syncEnabled;
     this.lastSync.textContent = `Last sync: ${lastSync}`;
+    if (gmailEmail) this.notice.textContent = `Sync with account ${gmailEmail}`;
+    else this.notice.textContent = null;
   }
 
   syncCheckboxChanged(e) {
@@ -99,8 +111,12 @@ class AccountLine extends HTMLDivElement {
 
   async connectButtonClicked() {
     acc = getOrCreateAccountSyncable(this.getAttribute("account-id"));
-    acc.accessToken = await getAccessToken();
+    let userData = await connectWithGoogle();
+    acc.gmailEmail = userData.email;
+    acc.gmailId = userData.sub;
+    this.setAttribute("gmail-email", userData.email);
     updateSyncable(acc);
+    this.render()
   }
 
   connectedCallback() {
