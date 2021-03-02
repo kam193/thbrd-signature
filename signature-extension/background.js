@@ -4,10 +4,6 @@ function updateSyncable(syncable) {
   preferences.setPref("syncAccounts", acc);
 }
 
-browser.browserAction.onClicked.addListener(async () => {
-  syncAccounts();
-});
-
 async function getUserSignature(gmailEmail) {
   let dataUrl = "https://www.googleapis.com/gmail/v1/users/me/settings/sendAs";
   let token = await getToken(gmailEmail);
@@ -18,10 +14,6 @@ async function getUserSignature(gmailEmail) {
   });
   return signature;
 }
-
-let defaultPreferences = {
-  syncAccounts: {},
-};
 
 async function syncAccounts() {
   let syncableAccounts = preferences.getPref("syncAccounts");
@@ -44,8 +36,14 @@ async function syncAccounts() {
     }
     updateSyncable(syncable);
   }
+  console.log("Sync finished");
 }
+
+let defaultPreferences = {
+  syncAccounts: {},
+};
 
 (async function () {
   await preferences.init(defaultPreferences);
+  await syncAccounts();
 })();

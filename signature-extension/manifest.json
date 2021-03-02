@@ -26,8 +26,5 @@
         "script": "implementation.js"
       }
     }
-  },
-  "browser_action": {
-    "default_title": "Set signature"
   }
 }
