@@ -17,7 +17,6 @@ async function getUserSignature(gmailEmail) {
 
 async function syncAccounts() {
   let syncableAccounts = preferences.getPref("syncAccounts");
-  console.log(syncableAccounts);
   for (const [account_id, syncable] of Object.entries(syncableAccounts)) {
     if (!syncable.syncEnabled) {
       syncable.lastError = null;

@@ -40,7 +40,6 @@ async function loadAccountList() {
   accounts = await browser.accounts.list();
   accounts = accounts.filter((account) => account.type !== "none");
   accounts.map((x) => addToList(x));
-  console.log(accounts);
 }
 
 class AccountLine extends HTMLDivElement {
