@@ -16,12 +16,6 @@ function getOrCreateAccountSyncable(account_id) {
   return acc[account_id];
 }
 
-function updateSyncable(syncable) {
-  acc = preferences.getPref("syncAccounts");
-  acc[syncable.accountId] = syncable;
-  preferences.setPref("syncAccounts", acc);
-}
-
 async function loadAccountList() {
   await preferences.init(defaultPreferences);
 
@@ -34,7 +28,9 @@ async function loadAccountList() {
 
     line.setAttribute("sync-enabled", syncable.syncEnabled);
     line.setAttribute("account-name", acc.name);
-    line.setAttribute("last-sync", syncable.lastSync);
+    if (syncable.lastSync) {
+      line.setAttribute("last-sync", syncable.lastSync.toISOString().slice(0, 10));
+    }
     line.setAttribute("account-id", acc.id);
     if (syncable.gmailEmail) line.setAttribute("gmail-email", syncable.gmailEmail);
     if (syncable.lastError) line.setAttribute("last-error", syncable.lastError);
@@ -66,6 +62,10 @@ class AccountLine extends HTMLDivElement {
     this.accountName.classList.add("text");
     this.appendChild(this.accountName);
 
+    this.lastSync = document.createElement("div");
+    this.lastSync.classList.add("text-shortcut");
+    this.appendChild(this.lastSync);
+
     let loginContainer = document.createElement("div");
     loginContainer.classList.add("login");
     this.login = document.createElement("button");
@@ -77,13 +77,13 @@ class AccountLine extends HTMLDivElement {
     loginContainer.appendChild(this.login);
     this.appendChild(loginContainer);
 
-    this.lastSync = document.createElement("div");
-    this.lastSync.classList.add("text-shortcut");
-    this.appendChild(this.lastSync);
-
     this.notice = document.createElement("div");
     this.notice.classList.add("notice");
     this.appendChild(this.notice);
+
+    this.error = document.createElement("div");
+    this.error.classList.add("notice", "error");
+    this.appendChild(this.error);
   }
 
   render() {
@@ -97,8 +97,12 @@ class AccountLine extends HTMLDivElement {
     this.accountName.textContent = accountName;
     this.login.disabled = !syncEnabled;
     this.lastSync.textContent = `Last sync: ${lastSync}`;
+
     if (gmailEmail) this.notice.textContent = `Sync with account ${gmailEmail}`;
     else this.notice.textContent = null;
+
+    if (lastError) this.error.textContent = lastError;
+    else this.error.textContent = null;
   }
 
   syncCheckboxChanged(e) {
@@ -116,7 +120,7 @@ class AccountLine extends HTMLDivElement {
     acc.gmailId = userData.sub;
     this.setAttribute("gmail-email", userData.email);
     updateSyncable(acc);
-    this.render()
+    this.render();
   }
 
   connectedCallback() {
@@ -128,6 +132,17 @@ class AccountLine extends HTMLDivElement {
   }
 }
 
+function listenButton() {
+  let syncButton = document.querySelector("#syncButton");
+  syncButton.addEventListener("click", async () => {
+    syncButton.disabled = true;
+    await syncAccounts();
+    await loadAccountList();
+    syncButton.disabled = false;
+  });
+}
+
 const browser = window.browser.extension.getBackgroundPage().browser;
 customElements.define("account-line", AccountLine, { extends: "div" });
 document.addEventListener("DOMContentLoaded", loadAccountList);
+document.addEventListener("DOMContentLoaded", listenButton);

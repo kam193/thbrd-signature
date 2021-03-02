@@ -1,19 +1,16 @@
-
+function updateSyncable(syncable) {
+  acc = preferences.getPref("syncAccounts");
+  acc[syncable.accountId] = syncable;
+  preferences.setPref("syncAccounts", acc);
+}
 
 browser.browserAction.onClicked.addListener(async () => {
-  accounts = await browser.accounts.list();
-  console.log(accounts);
-  identity_id = accounts[1].identities[0].id;
-
-  let signature = await getUserSignature();
-  console.log(signature);
-
-  // await browser.signatureApi.setSignatureHTML(identity_id, signature);
+  syncAccounts();
 });
 
-async function getUserSignature() {
+async function getUserSignature(gmailEmail) {
   let dataUrl = "https://www.googleapis.com/gmail/v1/users/me/settings/sendAs";
-  let token = await getAccessToken();
+  let token = await getToken(gmailEmail);
   let settings = await makeRequest(token, dataUrl);
   let signature = null;
   settings.sendAs.forEach((alias) => {
@@ -25,6 +22,29 @@ async function getUserSignature() {
 let defaultPreferences = {
   syncAccounts: {},
 };
+
+async function syncAccounts() {
+  let syncableAccounts = preferences.getPref("syncAccounts");
+  console.log(syncableAccounts);
+  for (const [account_id, syncable] of Object.entries(syncableAccounts)) {
+    if (!syncable.syncEnabled) {
+      syncable.lastError = null;
+      continue;
+    }
+    try {
+      let signature = await getUserSignature(syncable.gmailEmail);
+      let account = await browser.accounts.get(account_id);
+      await browser.signatureApi.setSignatureHTML(account.identities[0].id, signature);
+      syncable.lastSync = new Date();
+      syncable.lastError = null;
+    } catch (error) {
+      console.error(`Cannot sync for the account ${account_id} with ${syncable.gmailEmail}`);
+      console.error(error);
+      syncable.lastError = `Sync failed at ${new Date().toISOString()}`;
+    }
+    updateSyncable(syncable);
+  }
+}
 
 (async function () {
   await preferences.init(defaultPreferences);

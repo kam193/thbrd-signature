@@ -1,91 +1,98 @@
 body {
-    font-family: 'Fira Sans';
-    font-size: 14px;
-	line-height: 1.5;
-	margin: 0 0 1rem;
+  font-family: "Fira Sans";
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 1rem;
 }
 
 h1 {
-    font-size: 20px;
-    font-weight: 300;
-    margin: 1rem 0 0;
+  font-size: 20px;
+  font-weight: 300;
+  margin: 1rem 0 0;
 }
 
 h2 {
-    font-size: 16px;
-    font-weight: 300;
-    margin: 1rem 0 0;
+  font-size: 16px;
+  font-weight: 300;
+  margin: 1rem 0 0;
 }
 
 h3 {
-	font-size: 13px;
-	font-weight: 600;
-	margin: 1rem 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 1rem 0 0;
 }
 
 .nobottom {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .login {
-    justify-content: flex-end;
-    margin-right: 0.5em;
-    margin-top: 3px;
-    margin-bottom: 3px;
+  justify-content: flex-end;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+.text-shortcut {
+  margin-right: 0.5em;
 }
 
 .panel-list-item {
-    margin: 3px 0;
-    height: auto;
-    flex-wrap: wrap;
+  margin: 3px 0;
+  height: auto;
+  flex-wrap: wrap;
 }
 
-.panel-list-item:hover{
-    border: 0;
+.panel-list-item:hover {
+  border: 0;
 }
 
 .notice {
-    flex-basis: 100%;
-    padding-left: 26px;
-    font-size: .847em;
-    color: #808080;
+  flex-basis: 100%;
+  padding-left: 26px;
+  font-size: 0.847em;
+  color: #808080;
+}
+
+.error {
+  color: red;
 }
 
 .button-line {
-    margin: 0 auto;
+  margin: 0 auto;
 }
 
 button {
-    box-shadow: 0 0 0 0 transparent;
-    border-radius: 2px;
-    height: 24px;
-    padding: 0 8px;
-    font-size: 11px;
-    background-color: rgba(12, 12, 13, 0.1);
-    border: 0;
-    color: #0c0c0d;
-    font-weight: 400;
+  box-shadow: 0 0 0 0 transparent;
+  border-radius: 2px;
+  height: 24px;
+  padding: 0 8px;
+  font-size: 11px;
+  background-color: rgba(12, 12, 13, 0.1);
+  border: 0;
+  color: #0c0c0d;
+  font-weight: 400;
 }
 
 button.big {
-    height: 32px;
-    min-width: 132px;
-    font-size: 13px;
-    text-align: center;
+  height: 32px;
+  min-width: 132px;
+  font-size: 13px;
+  text-align: center;
 }
 
 button:hover {
-    background-color: rgba(12, 12, 13, 0.2);
+  background-color: rgba(12, 12, 13, 0.2);
 }
 
 button:active {
-    background-color: rgba(12, 12, 13, 0.3);
+  background-color: rgba(12, 12, 13, 0.3);
 }
 
 button:focus {
-    box-shadow: 0 0 0 1px #0a84ff inset, 0 0 0 1px #0a84ff, 0 0 0 4px rgba(10, 132, 255, 0.3)
+  box-shadow: 0 0 0 1px #0a84ff inset, 0 0 0 1px #0a84ff, 0 0 0 4px rgba(10, 132, 255, 0.3);
 }
 
 button:disabled {
-    opacity: 40%;
+  opacity: 40%;
 }

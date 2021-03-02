@@ -57,3 +57,20 @@ function getToken(email) {
     })
     .then((r) => getUserData(r, email).then((j) => j.accessToken));
 }
+
+function makeRequest(accessToken, requestURL) {
+  const requestHeaders = new Headers();
+  requestHeaders.append("Authorization", "Bearer " + accessToken);
+  const mRequest = new Request(requestURL, {
+    method: "GET",
+    headers: requestHeaders,
+  });
+
+  return fetch(mRequest).then((response) => {
+    if (response.status === 200) {
+      return response.json();
+    } else {
+      throw response.status;
+    }
+  });
+}
