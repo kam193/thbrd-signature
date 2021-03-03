@@ -6,8 +6,12 @@
   <h1>Signature Sync for gmail</h1>
 
   <p>
-    Select accounts to sync and configure the Gmail accounts. Synchronization is run on every
-    startup
+    Select accounts to sync and connect Gmail accounts. Synchronization is run on every startup and
+    works in just one way - your local signature is overriden by Gmail's ones.
+  </p>
+  <p>
+    In case of any troubles, you will see the red annotation here. If manual sync doesn't fix it,
+    try re-connect your Gmail account.
   </p>
 
   <div class="browser-style panel-section-list" id="signatureAccountList">
@@ -23,6 +27,17 @@
   <div class="button-line">
     <button class="big" id="syncButton">Sync now</button>
   </div>
+
+  <p>
+    This is a beta version, please keep it in mind. Any issues you can report on
+    <a href="https://github.com/kam193/thbrd-signature">Github repository</a>.
+  </p>
+  <p>
+    The add-on uses
+    <a target="_blank" href="https://icons8.com/icons/set/signature">Signature icon</a> by
+    <a target="_blank" href="https://icons8.com">Icons8</a> and some useful stuff from third
+    party libraries. Look into Github repository for more information!
+  </p>
 
   <script src="_lib/preferences.js"></script>
   <script src="_lib/authorize.js"></script>

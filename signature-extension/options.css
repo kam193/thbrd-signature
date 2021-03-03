@@ -96,3 +96,8 @@ button:focus {
 button:disabled {
   opacity: 40%;
 }
+
+p {
+  margin-bottom: 0;
+  text-align: justify;
+}
