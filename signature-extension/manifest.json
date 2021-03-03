@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "author": "Kamil Mankowski",
   "description": "Sync your signatures with Gmail accounts",
+  "icons": {
+    "64": "_img/icons8-signature-64.png"
+  },
   "applications": {
     "gecko": {
       "id": "signature-sync@thunderbird.extensions.kam193",
