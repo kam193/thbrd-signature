@@ -30,7 +30,7 @@ This add-on uses some external resources:
 - Files from external libraries, which full list you can find in
   the license file [\_lib directory](signature-extension/_lib/LICENSE.md)
 - Signature icon from [Icon8](https://icons8.com), you can find more in
-  the license file in [\_img directory](signature-extension/_img/LICENSE.md)
+  the license file in [\_img directory](signature-extension/_img/LICENSE)
 
 ----
 
