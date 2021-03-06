@@ -1,12 +1,23 @@
 const OAUTH_CLIENT = "";
-const SCOPES_LIST = "openid email profile https://www.googleapis.com/auth/gmail.settings.basic";
+const SCOPES_LIST = "email https://www.googleapis.com/auth/gmail.settings.basic";
 const AUTH_BASE = `https://accounts.google.com/o/oauth2/auth\
-?client_id=${OAUTH_CLIENT}\
-&response_type=token\
+?response_type=token\
 &redirect_uri=${encodeURIComponent(REDIRECT_URL)}\
 &scope=${encodeURIComponent(SCOPES_LIST)}`;
 const CONNECT_URL = `${AUTH_BASE}&prompt=select_account`;
 const ERROR = "Authorization error";
+
+function getOauthClientId() {
+  let clientId = preferences.getPref("oauthClient");
+  if (!clientId) clientId = OAUTH_CLIENT;
+  if (!clientId) console.error("No client id!");
+  return clientId;
+}
+
+
+function buildURLWithClientId(url) {
+  return `${url}&client_id=${getOauthClientId()}`;
+}
 
 function getUserData(redirectURL, expectedEmail) {
   const accessToken = extractAccessToken(redirectURL);
@@ -14,7 +25,7 @@ function getUserData(redirectURL, expectedEmail) {
     throw ERROR;
   }
   const validationURL = `${VALIDATION_BASE_URL}?access_token=${accessToken}`;
-  const validationRequest = new Request(validationURL, {
+  const validationRequest = new Request(buildURLWithClientId(validationURL), {
     method: "GET",
   });
 
@@ -24,7 +35,7 @@ function getUserData(redirectURL, expectedEmail) {
         reject(ERROR);
       }
       response.json().then((json) => {
-        if (json.aud && json.aud === OAUTH_CLIENT) {
+        if (json.aud && json.aud === getOauthClientId()) {
           if (expectedEmail && json.email !== expectedEmail) {
             reject(ERROR);
           }
@@ -43,7 +54,7 @@ function connectWithGoogle() {
   return browser.identity
     .launchWebAuthFlow({
       interactive: true,
-      url: CONNECT_URL,
+      url: buildURLWithClientId(CONNECT_URL),
     })
     .then(getUserData);
 }
@@ -53,7 +64,7 @@ function getToken(email) {
   return browser.identity
     .launchWebAuthFlow({
       interactive: false,
-      url: url,
+      url: buildURLWithClientId(url),
     })
     .then((r) => getUserData(r, email).then((j) => j.accessToken));
 }

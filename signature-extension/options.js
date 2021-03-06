@@ -17,8 +17,6 @@ function getOrCreateAccountSyncable(account_id) {
 }
 
 async function loadAccountList() {
-  await preferences.init(defaultPreferences);
-
   let listPlaceholder = document.querySelector("#signatureAccountList");
   listPlaceholder.querySelectorAll("*").forEach((n) => n.remove());
 
@@ -77,11 +75,11 @@ class AccountLine extends HTMLDivElement {
     this.appendChild(loginContainer);
 
     this.notice = document.createElement("div");
-    this.notice.classList.add("notice");
+    this.notice.classList.add("notice", "check-padding");
     this.appendChild(this.notice);
 
     this.error = document.createElement("div");
-    this.error.classList.add("notice", "error");
+    this.error.classList.add("notice", "error", "check-padding");
     this.appendChild(this.error);
   }
 
@@ -141,7 +139,29 @@ function listenButton() {
   });
 }
 
+async function listenOauthClient() {
+  const oauthInput = document.querySelector("#oauthid");
+  const oauthError = document.querySelector("#oauthid-error");
+  const clientId = preferences.getPref("oauthClient");
+
+  oauthInput.value = clientId;
+  if (clientId) oauthError.classList.add("hidden");
+
+  oauthInput.addEventListener("input", async () => {
+    const newValue = oauthInput.value;
+    preferences.setPref("oauthClient", newValue);
+    if (!newValue) oauthError.classList.remove("hidden");
+    else oauthError.classList.add("hidden");
+  });
+}
+
+async function load() {
+  await preferences.init(defaultPreferences);
+  loadAccountList();
+  listenButton();
+  listenOauthClient();
+}
+
 const browser = window.browser.extension.getBackgroundPage().browser;
 customElements.define("account-line", AccountLine, { extends: "div" });
-document.addEventListener("DOMContentLoaded", loadAccountList);
-document.addEventListener("DOMContentLoaded", listenButton);
+document.addEventListener("DOMContentLoaded", load);

@@ -5,6 +5,8 @@
 <body>
   <h1>Signature Sync for gmail</h1>
 
+  <h2>Accounts to sync</h2>
+
   <p>
     Select accounts to sync and connect Gmail accounts. Synchronization is run on every startup and
     works in just one way - your local signature is overriden by Gmail's ones.
@@ -28,6 +30,28 @@
     <button class="big" id="syncButton">Sync now</button>
   </div>
 
+  <h2>Google OAuth ClientID</h2>
+
+  <p>
+    As for now you need to create your own OAuth application in Google to make the extension
+    working. Registring OAuth application allows you to use Google API what is necessary to sync
+    your signatures. This is free and you can find instruction on the
+    <a href="https://github.com/kam193/thbrd-signature/wiki/Registering-own-OAuth-app-in-Google">
+      extension wiki</a
+    >. Then put the ID you get in the field below.
+  </p>
+  <p class="notice">
+    The extension version with pre-defined OAuth client is ongoing, but registring publicly
+    avialiable OAuth application in Google needs additional time and a few limitations that not so
+    obvious for just a simple Thunderbird extension.
+  </p>
+  <p>
+    <input type="text" class="wide" id="oauthid" placeholder="Your OAuth Client ID" />
+  </p>
+  <div class="notice error" id="oauthid-error">The OAuth client ID is required to work</div>
+
+  <h2>About</h2>
+
   <p>
     This is a beta version, please keep it in mind. Any issues you can report on
     <a href="https://github.com/kam193/thbrd-signature">Github repository</a>.
@@ -35,8 +59,8 @@
   <p>
     The add-on uses
     <a target="_blank" href="https://icons8.com/icons/set/signature">Signature icon</a> by
-    <a target="_blank" href="https://icons8.com">Icons8</a> and some useful stuff from third
-    party libraries. Look into Github repository for more information!
+    <a target="_blank" href="https://icons8.com">Icons8</a> and some useful stuff from third party
+    libraries. Look into Github repository for more information!
   </p>
 
   <script src="_lib/preferences.js"></script>

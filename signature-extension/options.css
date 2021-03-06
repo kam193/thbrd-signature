@@ -49,9 +49,12 @@ h3 {
 
 .notice {
   flex-basis: 100%;
-  padding-left: 26px;
   font-size: 0.847em;
   color: #808080;
+}
+
+.check-padding {
+  padding-left: 26px;
 }
 
 .error {
@@ -100,4 +103,12 @@ button:disabled {
 p {
   margin-bottom: 0;
   text-align: justify;
+}
+
+input.wide {
+  width: 100%;
+}
+
+.hidden {
+  display: none;
 }
