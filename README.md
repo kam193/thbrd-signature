@@ -4,9 +4,9 @@
   <img src="signature-extension/_img/icons8-signature-64.png" />
 </p>
 
-This extension allows you to easily synchronize signature of selected accounts
-in Thunderbird with your Gmail accounts. **Syncronization works in one way**,
-your local signatures are overridden by Gmail ones.
+This extension allows you to easily update signature of selected accounts
+in Thunderbird with the signature from your Gmail accounts.
+**Syncronization works in one way**, your local signatures are overridden by Gmail ones.
 
 In order to sync a signature, go to the settings page, enable an account and
 connect it with Gmail. Signatures are downloaded on every startup or when you
@@ -14,9 +14,22 @@ click in settings.
 
 > **Beta!** This is still a beta version. It can work unstable.
 
-## Run from source
+## How to install
 
-TODO
+After installation, open add-on preferences and configure it.
+
+### Install released version
+
+See also [Thunderbird documentation](http://mzl.la/20WLHOO)
+
+1. From _Releases_ page select the newest and download a file with `.xpi` extension.
+2. In Thunderbird, go to _Add-ons_ and open _Extensions_ tab.
+3. Click a button on the left site from the search bar, and use _Install Add-on from file_.
+
+### Install for debugging
+
+Follow the instruction from [Thunderbird documentation](https://developer.thunderbird.net/add-ons/mailextensions/hello-world-add-on#testing-the-extension)
+
 ## Privacy & usage terms
 
 The extension is working just locally on your computer. It doesn't send any data
@@ -32,6 +45,6 @@ This add-on uses some external resources:
 - Signature icon from [Icon8](https://icons8.com), you can find more in
   the license file in [\_img directory](signature-extension/_img/LICENSE)
 
-----
+---
 
-This extension is **not** made by Google or Thunderbird team. It's fully unofficial.
+This extension is **not** made by Google or Thunderbird team. It's unofficial.
