@@ -4,9 +4,9 @@ function updateSyncable(syncable) {
   preferences.setPref("syncAccounts", acc);
 }
 
-async function getUserSignature(gmailEmail) {
+async function getUserSignature(syncable) {
   let dataUrl = "https://www.googleapis.com/gmail/v1/users/me/settings/sendAs";
-  let token = await getToken(gmailEmail);
+  let token = await refreshAccessToken(syncable.refreshToken);
   let settings = await makeRequest(token, dataUrl);
   let signature = null;
   settings.sendAs.forEach((alias) => {
@@ -23,7 +23,7 @@ async function syncAccounts() {
       continue;
     }
     try {
-      let signature = await getUserSignature(syncable.gmailEmail);
+      let signature = await getUserSignature(syncable);
       let account = await browser.accounts.get(account_id);
       await browser.signatureApi.setSignatureHTML(account.identities[0].id, signature);
       syncable.lastSync = new Date();

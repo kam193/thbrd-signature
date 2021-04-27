@@ -1,10 +1,19 @@
-function AccountSyncable(accountId, syncEnabled, lastSync, gmailId, gmailEmail, lastError) {
+function AccountSyncable(
+  accountId,
+  syncEnabled,
+  lastSync,
+  gmailId,
+  gmailEmail,
+  lastError,
+  refreshToken
+) {
   this.accountId = accountId;
   this.syncEnabled = syncEnabled;
   this.lastSync = lastSync;
   this.gmailId = gmailId;
   this.gmailEmail = gmailEmail;
   this.lastError = lastError;
+  this.refreshToken = refreshToken;
 }
 
 function getOrCreateAccountSyncable(account_id) {
@@ -115,6 +124,7 @@ class AccountLine extends HTMLDivElement {
     let userData = await connectWithGoogle();
     acc.gmailEmail = userData.email;
     acc.gmailId = userData.sub;
+    acc.refreshToken = userData.refresh_token;
     this.setAttribute("gmail-email", userData.email);
     updateSyncable(acc);
     this.render();
