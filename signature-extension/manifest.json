@@ -17,7 +17,7 @@
   "background": {
     "page": "background.html"
   },
-  "permissions": ["accountsRead", "identity", "storage", "*://www.googleapis.com/*"],
+  "permissions": ["accountsRead", "identity", "storage", "*://www.googleapis.com/*", "*://oauth2.googleapis.com/*"],
   "options_ui": {
     "page": "options.html",
     "open_in_tab": false,
