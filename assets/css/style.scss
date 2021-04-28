@@ -1,0 +1,9 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+.button.addon {
+  background: transparent url(../images/addon.png) 0 0 no-repeat;
+  background-position: center;
+}
