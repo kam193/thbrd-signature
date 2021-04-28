@@ -165,11 +165,20 @@ async function listenOauthClient() {
   });
 }
 
+function listenChangelog() {
+  let changelogLink = document.querySelector("a#changelog");
+  changelogLink.addEventListener("click", (e) => {
+    browser.tabs.create({ url: "changelog.html" });
+    e.preventDefault();
+  });
+}
+
 async function load() {
   await preferences.init(defaultPreferences);
   loadAccountList();
   listenButton();
   listenOauthClient();
+  listenChangelog();
 }
 
 const browser = window.browser.extension.getBackgroundPage().browser;
