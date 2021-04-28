@@ -80,9 +80,9 @@ function getUserData(accessToken, expectedEmail) {
         reject(ERROR);
       }
       response.json().then((json) => {
-        console.log(json);
         if (json.aud && json.aud === getOauthClientId()) {
           if (expectedEmail && json.email !== expectedEmail) {
+            console.log(json)
             reject(ERROR);
           }
           resolve({ ...json });
@@ -98,7 +98,6 @@ function getUserData(accessToken, expectedEmail) {
 
 function connectWithGoogle() {
   const handleResponse = (redirectUrl) => {
-    console.log(redirectUrl);
     const code = extractCode(redirectUrl);
     if (!code) {
       console.log(redirectUrl);
@@ -121,7 +120,6 @@ function connectWithGoogle() {
           reject(ERROR);
         }
         response.json().then((json) => {
-          console.log(json);
           getUserData(json.access_token).then((userData) => resolve({ ...json, ...userData }));
         });
       });
