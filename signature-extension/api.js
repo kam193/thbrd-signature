@@ -24,12 +24,19 @@ function getOauthClientId() {
   return clientId;
 }
 
+function getOauthSecret() {
+  let clientSecret = preferences.getPref("oauthSecret");
+  if (!clientSecret) clientSecret = OAUTH_SECRET;
+  if (!clientSecret) console.error("No client secret!");
+  return clientSecret;
+}
+
 function addClientId(url) {
   return `${url}&client_id=${getOauthClientId()}`;
 }
 
 function addCredentialQuery(url) {
-  return `${addClientId(url)}&client_secret=${OAUTH_SECRET}`;
+  return `${addClientId(url)}&client_secret=${getOauthSecret()}`;
 }
 
 function extractCode(redirectUri) {

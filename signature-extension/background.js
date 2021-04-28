@@ -63,6 +63,7 @@ async function syncAccounts() {
 let defaultPreferences = {
   syncAccounts: {},
   oauthClient: "",
+  oauthSecret: "",
   failedCount: 0,
   changelogShown: 0,
 };

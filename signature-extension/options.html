@@ -39,7 +39,7 @@
     your signatures. This is free and you can find instruction on the
     <a href="https://github.com/kam193/thbrd-signature/wiki/Registering-own-OAuth-app-in-Google">
       extension wiki</a
-    >. Then put the ID you get in the field below.
+    >. Then put the ID and secret you get in the field below.
   </p>
   <p class="notice">
     The extension version with pre-defined OAuth client is ongoing, but registring publicly
@@ -48,8 +48,14 @@
   </p>
   <p>
     <input type="text" class="wide" id="oauthid" placeholder="Your OAuth Client ID" />
+    <input type="text" class="wide" id="oauthsecret" placeholder="Your OAuth secret" />
   </p>
-  <div class="notice error" id="oauthid-error">The OAuth client ID is required to work</div>
+  <div class="notice error" id="oauthid-error">
+    The OAuth client ID is required to work
+  </div>
+  <div class="notice error" id="oauthsecret-error">
+    The OAuth client secret is required to work
+  </div>
 
   <h2>About</h2>
 

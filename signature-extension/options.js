@@ -150,18 +150,31 @@ function listenButton() {
 }
 
 async function listenOauthClient() {
-  const oauthInput = document.querySelector("#oauthid");
-  const oauthError = document.querySelector("#oauthid-error");
+  const oauthIdInput = document.querySelector("#oauthid");
+  const oauthSecretInput = document.querySelector("#oauthsecret");
+  const oauthIdError = document.querySelector("#oauthid-error");
+  const oauthSecretError = document.querySelector("#oauthsecret-error");
+
   const clientId = preferences.getPref("oauthClient");
+  const clientSecret = preferences.getPref("oauthSecret");
 
-  oauthInput.value = clientId;
-  if (clientId) oauthError.classList.add("hidden");
+  oauthIdInput.value = clientId;
+  oauthSecretInput.value = clientSecret;
+  if (clientId) oauthIdError.classList.add("hidden");
+  if (clientSecret) oauthSecretError.classList.add("hidden");
 
-  oauthInput.addEventListener("input", async () => {
-    const newValue = oauthInput.value;
+  oauthIdInput.addEventListener("input", async () => {
+    const newValue = oauthIdInput.value;
     preferences.setPref("oauthClient", newValue);
-    if (!newValue) oauthError.classList.remove("hidden");
-    else oauthError.classList.add("hidden");
+    if (!newValue) oauthIdError.classList.remove("hidden");
+    else oauthIdError.classList.add("hidden");
+  });
+
+  oauthSecretInput.addEventListener("input", async () => {
+    const newValue = oauthSecretInput.value;
+    preferences.setPref("oauthSecret", newValue);
+    if (!newValue) oauthSecretError.classList.remove("hidden");
+    else oauthSecretError.classList.add("hidden");
   });
 }
 
