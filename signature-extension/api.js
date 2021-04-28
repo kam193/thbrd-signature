@@ -81,12 +81,9 @@ function getUserData(accessToken, expectedEmail) {
       }
       response.json().then((json) => {
         if (json.aud && json.aud === getOauthClientId()) {
-          if (expectedEmail && json.email !== expectedEmail) {
-            console.log(json)
-            reject(ERROR);
-          }
           resolve({ ...json });
         } else {
+          console.log(json);
           reject("Token validation error");
         }
       });
@@ -97,14 +94,16 @@ function getUserData(accessToken, expectedEmail) {
 }
 
 function connectWithGoogle() {
+  const token = randomToken();
   const handleResponse = (redirectUrl) => {
     const code = extractCode(redirectUrl);
     if (!code) {
       console.log(redirectUrl);
+      openError("connect-error.html");
       throw ERROR;
     }
 
-    const data = addCredentialQuery(`${TOKEN_BASE}&code=${code}`);
+    const data = addCredentialQuery(`${TOKEN_BASE}&code=${code}&code_verifier=${token}`);
     const dataRequest = new Request(TOKEN_URL, {
       method: "POST",
       body: data,
@@ -120,7 +119,12 @@ function connectWithGoogle() {
           reject(ERROR);
         }
         response.json().then((json) => {
-          getUserData(json.access_token).then((userData) => resolve({ ...json, ...userData }));
+          getUserData(json.access_token)
+            .then((userData) => resolve({ ...json, ...userData }))
+            .catch((err) => {
+              console.error(err);
+              openError("connect-error.html");
+            });
         });
       });
     });
@@ -129,7 +133,7 @@ function connectWithGoogle() {
   return browser.identity
     .launchWebAuthFlow({
       interactive: true,
-      url: addClientId(CONNECT_URL),
+      url: addClientId(`${CONNECT_URL}&code_challenge=${token}&code_challenge_method=plain`),
     })
     .then(handleResponse);
 }

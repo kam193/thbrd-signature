@@ -48,13 +48,7 @@ async function syncAccounts() {
     console.log(`Sync failed. It's ${countedFails} failed sync.`);
 
     if (countedFails % 3 === 0) {
-      browser.windows.create({
-        type: "popup",
-        height: 300,
-        width: 500,
-        url: "sync-error.html",
-        allowScriptsToClose: true,
-      });
+      openError("sync-error.html");
     }
   }
   console.log("Sync finished");
