@@ -55,7 +55,6 @@ function refreshAccessToken(refreshToken) {
         reject("Cannot refresh access token");
       }
       response.json().then((json) => {
-        alert(json.access_token);
         resolve(json.access_token);
       });
     });
