@@ -17,6 +17,7 @@ async function getUserSignature(syncable) {
 
 async function syncAccounts() {
   let syncableAccounts = preferences.getPref("syncAccounts");
+  let failed = 0;
   for (const [account_id, syncable] of Object.entries(syncableAccounts)) {
     if (!syncable.syncEnabled) {
       syncable.lastError = null;
@@ -32,8 +33,27 @@ async function syncAccounts() {
       console.error(`Cannot sync for the account ${account_id} with ${syncable.gmailEmail}`);
       console.error(error);
       syncable.lastError = `Sync failed at ${new Date().toISOString()}`;
+      failed += 1;
     }
     updateSyncable(syncable);
+  }
+  if (failed === 0) {
+    preferences.setPref("failedCount", 0);
+  } else {
+    let countedFails = preferences.getPref("failedCount");
+    countedFails += 1;
+    preferences.setPref("failedCount", countedFails);
+    console.log(`Sync failed. It's ${countedFails} failed sync.`);
+
+    if (countedFails % 3 === 0) {
+      browser.windows.create({
+        type: "popup",
+        height: 300,
+        width: 500,
+        url: "sync-error.html",
+        allowScriptsToClose: true,
+      });
+    }
   }
   console.log("Sync finished");
 }
@@ -41,6 +61,7 @@ async function syncAccounts() {
 let defaultPreferences = {
   syncAccounts: {},
   oauthClient: "",
+  failedCount: 0,
 };
 
 (async function () {

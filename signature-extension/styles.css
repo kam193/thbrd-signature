@@ -3,6 +3,7 @@ body {
   font-size: 14px;
   line-height: 1.5;
   margin: 0 0 1rem;
+  margin: 5px;
 }
 
 h1 {
@@ -111,4 +112,17 @@ input.wide {
 
 .hidden {
   display: none;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.centered {
+  text-align: center;
+  margin: 10px;
+}
+
+.margined {
+  margin: 20px;
 }
