@@ -1,9 +1,9 @@
 theme: jekyll-theme-architect
 title: Signature sync add-on
 description: Signature sync for Gmail, a Thunderbird add-on
-show_downloads: true
-github:
-  another_url: https://addons.thunderbird.net/en-US/thunderbird/addon/signature-sync-for-gmail/
+# show_downloads: true
+# github:
+#   another_url: https://addons.thunderbird.net/en-US/thunderbird/addon/signature-sync-for-gmail/
 defaults:
   - scope:
       path: ""
