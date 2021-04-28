@@ -3,5 +3,4 @@ defaults:
   - scope:
       path: ""
     values:
-      layout: "default"
       title: "Signature sync for Gmail, a Thunderbird add-on"

@@ -1,37 +1,30 @@
-## Welcome to GitHub Pages
+## Signature sync for Gmail, a Thunderbird add-on
 
-You can use the [editor on GitHub](https://github.com/kam193/thbrd-signature/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+This extension allows you to easily update signature of selected accounts
+in Thunderbird with the signature from your Gmail accounts.
+**Syncronization works in one way**, your local signatures are overridden by Gmail ones.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+In order to sync a signature, go to the settings page, enable an account and
+connect it with Gmail. Signatures are downloaded on every startup or when you
+click in settings.
 
-### Markdown
+> **Beta!** This is still a beta version. It can work unstable.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### Get the add-on
 
-```markdown
-Syntax highlighted code block
+* For released version, use the [https://addons.thunderbird.net/en-US/thunderbird/addon/signature-sync-for-gmail/ Thunderbird Add-on portal].
+* For development purpose, use instructions from the [https://github.com/kam193/thbrd-signature repository].
 
-# Header 1
-## Header 2
-### Header 3
+## Privacy & usage terms
 
-- Bulleted
-- List
+The extension is working just locally on your computer. It doesn't send any data
+outside, except of needed requests to Google API. Use it to update your local
+signatures from Gmail.
 
-1. Numbered
-2. List
+### License & external sources
 
-**Bold** and _Italic_ and `Code` text
+See notes in the [https://github.com/kam193/thbrd-signature repository].
 
-[Link](url) and ![Image](src)
-```
+----
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/kam193/thbrd-signature/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+This extension is **not** made by Google or Thunderbird team. It's unofficial.
