@@ -12,8 +12,8 @@ click in settings.
 
 ### Get the add-on
 
-* For released version, use the [https://addons.thunderbird.net/en-US/thunderbird/addon/signature-sync-for-gmail/ Thunderbird Add-on portal].
-* For development purpose, use instructions from the [https://github.com/kam193/thbrd-signature repository].
+* For released version, use the [Thunderbird Add-on portal](https://addons.thunderbird.net/en-US/thunderbird/addon/signature-sync-for-gmail/).
+* For development purpose, use instructions from the [repository](https://github.com/kam193/thbrd-signature).
 
 ## Privacy & usage terms
 
@@ -23,7 +23,7 @@ signatures from Gmail.
 
 ### License & external sources
 
-See notes in the [https://github.com/kam193/thbrd-signature repository].
+See notes in the [repository](https://github.com/kam193/thbrd-signature).
 
 ----
 
