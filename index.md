@@ -33,4 +33,4 @@ See notes in the [repository](https://github.com/kam193/thbrd-signature).
 
 ---
 
-This extension is **not** made by Google or Thunderbird team. It's unofficial.Signature icon from [Icon8](https://icons8.com).
+This extension is **not** made by Google or Thunderbird team. It's unofficial. Signature icon from [Icon8](https://icons8.com).
