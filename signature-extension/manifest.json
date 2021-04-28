@@ -1,10 +1,10 @@
 {
   "manifest_version": 2,
   "name": "Signature sync for Gmail",
-  "version": "2.0.0beta",
+  "version": "2.0.0",
   "author": "Kamil Mańkowski",
   "description": "Sync your signatures with Gmail accounts",
-  "homepage_url": "https://github.com/kam193/thbrd-signature",
+  "homepage_url": "https://thbrd-signature.kam193.eu/",
   "icons": {
     "64": "_img/icons8-signature-64.png"
   },
@@ -17,7 +17,13 @@
   "background": {
     "page": "background.html"
   },
-  "permissions": ["accountsRead", "identity", "storage", "*://www.googleapis.com/*", "*://oauth2.googleapis.com/*"],
+  "permissions": [
+    "accountsRead",
+    "identity",
+    "storage",
+    "*://www.googleapis.com/*",
+    "*://oauth2.googleapis.com/*"
+  ],
   "options_ui": {
     "page": "options.html",
     "open_in_tab": false,
