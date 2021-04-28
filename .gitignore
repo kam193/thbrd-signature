@@ -1,0 +1,4 @@
+.env
+*.xpi
+dependencies/
+signature-extension/
