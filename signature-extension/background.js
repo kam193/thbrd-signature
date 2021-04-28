@@ -1,3 +1,5 @@
+const VERSION = 1;
+
 function updateSyncable(syncable) {
   acc = preferences.getPref("syncAccounts");
   acc[syncable.accountId] = syncable;
@@ -62,9 +64,19 @@ let defaultPreferences = {
   syncAccounts: {},
   oauthClient: "",
   failedCount: 0,
+  changelogShown: 0,
 };
+
+function changelog() {
+  let shown_version = preferences.getPref("changelogShown");
+  if (shown_version < VERSION) {
+    browser.tabs.create({ url: "changelog.html" });
+  }
+  preferences.setPref("changelogShown", VERSION);
+}
 
 (async function () {
   await preferences.init(defaultPreferences);
   await syncAccounts();
+  changelog();
 })();
