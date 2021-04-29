@@ -33,6 +33,4 @@ the add-on by Thunderbird. Signatures are saved in Thunderbird accounts' prefere
 There is no other services involved. No telemetry, no cloud storage. The add-on
 never sends your data outside.
 
-```
 Last update: 2021-04-29
-```
