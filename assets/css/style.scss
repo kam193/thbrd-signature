@@ -14,7 +14,7 @@ header h2 {
 
 @media only screen and (max-width: 767px) {
   aside#sidebar a.button {
-    display: unset !important;
+    display: block !important;
   }
   header h2 {
     width: unset !important;
