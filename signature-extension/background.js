@@ -19,7 +19,7 @@ async function getUserSignature(syncable) {
 
 async function syncAccounts() {
   let syncableAccounts = preferences.getPref("syncAccounts");
-  let failed = 0;
+  let failed = [];
   for (const [account_id, syncable] of Object.entries(syncableAccounts)) {
     if (!syncable.syncEnabled) {
       syncable.lastError = null;
@@ -35,11 +35,11 @@ async function syncAccounts() {
       console.error(`Cannot sync for the account ${account_id} with ${syncable.gmailEmail}`);
       console.error(error);
       syncable.lastError = `Sync failed at ${new Date().toISOString()}`;
-      failed += 1;
+      failed.push(syncable.gmailEmail);
     }
     updateSyncable(syncable);
   }
-  if (failed === 0) {
+  if (failed.length === 0) {
     preferences.setPref("failedCount", 0);
   } else {
     let countedFails = preferences.getPref("failedCount");
@@ -48,7 +48,7 @@ async function syncAccounts() {
     console.log(`Sync failed. It's ${countedFails} failed sync.`);
 
     if (countedFails % 3 === 0) {
-      openError("sync-error.html");
+      openError("sync-error.html", failed.join(", "));
     }
   }
   console.log("Sync finished");

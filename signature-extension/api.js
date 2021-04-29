@@ -46,15 +46,12 @@ function addCredentialQuery(url) {
 }
 
 function extractCode(redirectUri) {
-  let m = redirectUri.match(/[#?](.*)/);
-  if (!m || m.length < 1) return null;
-  let params = new URLSearchParams(m[1].split("#")[0]);
-  return params.get("code");
+  return extractFromUrl(redirectUri, "code");
 }
 
 function handleError(err) {
   console.error(err);
-  openError("connect-error.html");
+  openError("connect-error.html", err);
 }
 
 function refreshAccessToken(refreshToken) {
@@ -110,7 +107,7 @@ function connectWithGoogle() {
     const code = extractCode(redirectUrl);
     if (!code) {
       console.log(redirectUrl);
-      openError("connect-error.html");
+      openError("connect-error.html", ERROR);
       throw ERROR;
     }
 
@@ -145,7 +142,7 @@ function connectWithGoogle() {
     connectUrl = addClientId(`${CONNECT_URL}&code_challenge=${token}&code_challenge_method=plain`);
   } catch (err) {
     console.error(err);
-    openError("connect-error.html");
+    openError("connect-error.html", err);
     return;
   }
 
@@ -155,10 +152,7 @@ function connectWithGoogle() {
       url: connectUrl,
     })
     .then(handleResponse)
-    .catch((err) => {
-      console.error(err);
-      openError("connect-error.html");
-    });
+    .catch(handleError);
 }
 
 function makeRequest(accessToken, requestURL) {
