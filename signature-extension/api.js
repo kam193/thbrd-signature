@@ -18,17 +18,23 @@ const REFRESH_DATA = "grant_type=refresh_token";
 const CONNECT_URL = `${AUTH_BASE}&prompt=select_account`;
 
 function getOauthClientId() {
-  let clientId = preferences.getPref("oauthClient");
-  if (!clientId) clientId = OAUTH_CLIENT;
-  if (!clientId) console.error("No client id!");
-  return clientId;
+  let useOwn = preferences.getPref("useOwnCredentials");
+  if (useOwn) {
+    let clientId = preferences.getPref("oauthClient");
+    if (!clientId) throw "No client id!";
+    return clientId;
+  }
+  return OAUTH_CLIENT;
 }
 
 function getOauthSecret() {
-  let clientSecret = preferences.getPref("oauthSecret");
-  if (!clientSecret) clientSecret = OAUTH_SECRET;
-  if (!clientSecret) console.error("No client secret!");
-  return clientSecret;
+  let useOwn = preferences.getPref("useOwnCredentials");
+  if (useOwn) {
+    let clientSecret = preferences.getPref("oauthSecret");
+    if (!clientSecret) throw "No client secret!";
+    return clientSecret;
+  }
+  return OAUTH_SECRET;
 }
 
 function addClientId(url) {
@@ -44,6 +50,11 @@ function extractCode(redirectUri) {
   if (!m || m.length < 1) return null;
   let params = new URLSearchParams(m[1].split("#")[0]);
   return params.get("code");
+}
+
+function handleError(err) {
+  console.error(err);
+  openError("connect-error.html");
 }
 
 function refreshAccessToken(refreshToken) {
@@ -68,7 +79,7 @@ function refreshAccessToken(refreshToken) {
   });
 }
 
-function getUserData(accessToken, expectedEmail) {
+function getUserData(accessToken) {
   const validationURL = `${VALIDATION_BASE_URL}?access_token=${accessToken}`;
   const validationRequest = new Request(addClientId(validationURL), {
     method: "GET",
@@ -77,7 +88,7 @@ function getUserData(accessToken, expectedEmail) {
   function parseAndValidate(response) {
     return new Promise((resolve, reject) => {
       if (response.status != 200) {
-        reject(ERROR);
+        throw ERROR;
       }
       response.json().then((json) => {
         if (json.aud && json.aud === getOauthClientId()) {
@@ -112,30 +123,42 @@ function connectWithGoogle() {
       },
     });
 
-    return new Promise((resolve, reject) => {
-      fetch(dataRequest).then((response) => {
-        if (response.status != 200) {
-          console.log(response);
-          reject(ERROR);
-        }
-        response.json().then((json) => {
-          getUserData(json.access_token)
-            .then((userData) => resolve({ ...json, ...userData }))
-            .catch((err) => {
-              console.error(err);
-              openError("connect-error.html");
-            });
-        });
-      });
+    return new Promise((resolve, _) => {
+      fetch(dataRequest)
+        .then((response) => {
+          if (response.status != 200) {
+            console.log(response);
+            throw ERROR;
+          }
+          response.json().then((json) => {
+            getUserData(json.access_token)
+              .then((userData) => resolve({ ...json, ...userData }))
+              .catch(handleError);
+          });
+        })
+        .catch(handleError);
     });
   };
+
+  let connectUrl = "";
+  try {
+    connectUrl = addClientId(`${CONNECT_URL}&code_challenge=${token}&code_challenge_method=plain`);
+  } catch (err) {
+    console.error(err);
+    openError("connect-error.html");
+    return;
+  }
 
   return browser.identity
     .launchWebAuthFlow({
       interactive: true,
-      url: addClientId(`${CONNECT_URL}&code_challenge=${token}&code_challenge_method=plain`),
+      url: connectUrl,
     })
-    .then(handleResponse);
+    .then(handleResponse)
+    .catch((err) => {
+      console.error(err);
+      openError("connect-error.html");
+    });
 }
 
 function makeRequest(accessToken, requestURL) {
@@ -150,6 +173,7 @@ function makeRequest(accessToken, requestURL) {
     if (response.status === 200) {
       return response.json();
     } else {
+      console.log(response);
       throw response.status;
     }
   });
