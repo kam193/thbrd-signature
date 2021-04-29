@@ -27,6 +27,8 @@ The extension is working just locally on your computer. It doesn't send any data
 outside, except of needed requests to Google API. Use it to update your local
 signatures from Gmail.
 
+You can see more details on [Privacy Policy page](privacy.md).
+
 ### License & external sources
 
 See notes in the [repository](https://github.com/kam193/thbrd-signature).
