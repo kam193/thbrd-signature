@@ -36,7 +36,7 @@ function urlMessage() {
 
 function registerUtils() {
   let closeButtons = document.querySelector("button.close");
-  closeButtons.addEventListener("click", () => window.close());
+  if (closeButtons) closeButtons.addEventListener("click", () => window.close());
   urlMessage();
 }
 

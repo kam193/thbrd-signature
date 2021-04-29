@@ -41,20 +41,24 @@
       extension wiki</a
     >. Then put the ID and secret you get in the field below.
   </p>
-  <p class="notice">
-    The extension version with pre-defined OAuth client is ongoing, but registring publicly
-    avialiable OAuth application in Google needs additional time and a few limitations that not so
-    obvious for just a simple Thunderbird extension.
-  </p>
   <p>
-    <input type="text" class="wide" id="oauthid" placeholder="Your OAuth Client ID" />
-    <input type="text" class="wide" id="oauthsecret" placeholder="Your OAuth secret" />
+    <span class="browser-style nobottom"><input type="checkbox" id="oauth-use-own" checked disabled/></span
+    ><span class="text">Use own OAuth credentials (required for now)</span>
   </p>
-  <div class="notice error" id="oauthid-error">
-    The OAuth client ID is required to work
-  </div>
-  <div class="notice error" id="oauthsecret-error">
-    The OAuth client secret is required to work
+  <div id="oauth-form">
+    <p class="notice">
+      The extension version with pre-defined OAuth client is ongoing, but registring publicly
+      avialiable OAuth application in Google needs additional time and a few limitations that not so
+      obvious for just a simple Thunderbird extension.
+    </p>
+    <p>
+      <input type="text" class="wide" id="oauthid" placeholder="Your OAuth Client ID" />
+      <input type="text" class="wide" id="oauthsecret" placeholder="Your OAuth secret" />
+    </p>
+    <div class="notice error" id="oauthid-error">The OAuth client ID is required to work</div>
+    <div class="notice error" id="oauthsecret-error">
+      The OAuth client secret is required to work
+    </div>
   </div>
 
   <h2>About</h2>

@@ -186,12 +186,32 @@ function listenChangelog() {
   });
 }
 
+function listenUseOwnOauth() {
+  const useUwnOauthButton = document.querySelector("#oauth-use-own");
+  const ownCredentialsForm = document.querySelector("#oauth-form");
+
+  const handle = (value) => {
+    preferences.setPref("useOwnCredentials", value);
+    if (value) ownCredentialsForm.classList.remove("hidden");
+    else ownCredentialsForm.classList.add("hidden");
+  };
+
+  const useOwnOauthPref = preferences.getPref("useOwnCredentials");
+  useUwnOauthButton.checked = useOwnOauthPref;
+  handle(useOwnOauthPref);
+
+  useUwnOauthButton.addEventListener("click", (e) => {
+    handle(e.target.checked);
+  });
+}
+
 async function load() {
   await preferences.init(defaultPreferences);
   loadAccountList();
   listenButton();
   listenOauthClient();
   listenChangelog();
+  listenUseOwnOauth();
 }
 
 const browser = window.browser.extension.getBackgroundPage().browser;
