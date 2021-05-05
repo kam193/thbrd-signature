@@ -18,7 +18,13 @@ click in settings.
 
 After installation, open add-on preferences and configure it.
 
-### Install released version
+### Install from the Thunderbird add-on portal
+
+Preferred version for normal use, install from the
+[Thunderbird add-on portal](https://addons.thunderbird.net/en-US/thunderbird/addon/signature-sync-for-gmail/)
+or find _Signature Sync for Gmail_ in your Thunderbird add-ons preferences.
+
+### Install released version from Github
 
 See also [Thunderbird documentation](http://mzl.la/20WLHOO)
 
