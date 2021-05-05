@@ -1,5 +1,5 @@
-const OAUTH_CLIENT = "";
-const OAUTH_SECRET = "";
+const OAUTH_CLIENT = "<CLIENT_ID>";
+const OAUTH_SECRET = "<CLIENT_SECRET>";
 
 const ERROR = "Authorization error";
 const REDIRECT_SUBDOMAIN = browser.identity.getRedirectURL().substring(8);

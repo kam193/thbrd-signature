@@ -60,7 +60,7 @@ let defaultPreferences = {
   oauthSecret: "",
   failedCount: 0,
   changelogShown: 0,
-  useOwnCredentials: true,
+  useOwnCredentials: false,
 };
 
 function changelog() {
