@@ -12,8 +12,6 @@ In order to sync a signature, go to the settings page, enable an account and
 connect it with Gmail. Signatures are downloaded on every startup or when you
 click in settings.
 
-> **Beta!** This is still a beta version. It can work unstable.
-
 ## How to install
 
 After installation, open add-on preferences and configure it.
