@@ -28,7 +28,8 @@ async function syncAccounts() {
     try {
       let signature = await getUserSignature(syncable);
       let account = await browser.accounts.get(account_id);
-      await browser.signatureApi.setSignatureHTML(account.identities[0].id, signature);
+      let identity = {signature: signature, signatureIsPlainText: false};
+      await browser.identities.update(account.identities[0].id, identity);
       syncable.lastSync = new Date();
       syncable.lastError = null;
     } catch (error) {

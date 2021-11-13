@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Signature sync for Gmail",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "author": "Kamil Mańkowski",
   "description": "Sync your signatures with Gmail accounts",
   "homepage_url": "https://thbrd-signature.kam193.eu/",
@@ -11,7 +11,7 @@
   "applications": {
     "gecko": {
       "id": "signature-sync@thunderbird.extensions.kam193",
-      "strict_min_version": "78.4.0"
+      "strict_min_version": "91.0"
     }
   },
   "background": {
@@ -21,6 +21,7 @@
     "accountsRead",
     "identity",
     "storage",
+    "accountsIdentities",
     "*://www.googleapis.com/*",
     "*://oauth2.googleapis.com/*"
   ],
@@ -28,15 +29,5 @@
     "page": "options.html",
     "open_in_tab": false,
     "browser_style": true
-  },
-  "experiment_apis": {
-    "signatureApi": {
-      "schema": "schema.json",
-      "parent": {
-        "scopes": ["addon_parent"],
-        "paths": [["signatureApi"]],
-        "script": "implementation.js"
-      }
-    }
   }
 }
