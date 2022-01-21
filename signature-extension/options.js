@@ -41,6 +41,16 @@ async function loadAccountList() {
     line.setAttribute("account-id", acc.id);
     if (syncable.gmailEmail) line.setAttribute("gmail-email", syncable.gmailEmail);
     if (syncable.lastError) line.setAttribute("last-error", syncable.lastError);
+
+    let identities = [];
+    for (let identity of acc.identities) {
+      let label = `${identity.name} <${identity.email}>`;
+      if (identity.label) label += ` (${identity.label})`;
+      identities.push({id: identity.id, label: label});
+      console.log(identity);
+    }
+    line.setAttribute("identities", JSON.stringify(identities));
+
     listPlaceholder.appendChild(line);
   };
 
@@ -90,6 +100,35 @@ class AccountLine extends HTMLDivElement {
     this.error = document.createElement("div");
     this.error.classList.add("notice", "error", "check-padding");
     this.appendChild(this.error);
+
+    this.identitiesList = document.createElement("div");
+    this.identitiesList.classList.add("identities-list");
+    this.appendChild(this.identitiesList);
+  }
+
+  addIdentity(id, label) {
+    let identity = document.createElement("div");
+    identity.classList.add("identity-item");
+
+    let identityName = document.createElement("div");
+    identityName.classList.add("identity-name");
+    identityName.textContent = label;
+    identity.appendChild(identityName);
+
+    let identitySyncWith = document.createElement("div");
+    identitySyncWith.classList.add("identity-sync-with");
+    identity.appendChild(identitySyncWith);
+
+    let gmSignature = document.createElement("select");
+    gmSignature.classList.add("browser-style", "nobottom", "gm-signatures");
+    identitySyncWith.appendChild(gmSignature);
+
+    let gmSignatureOption = document.createElement("option");
+    gmSignatureOption.textContent = id;
+    gmSignatureOption.value = "gm-signature";
+    gmSignature.appendChild(gmSignatureOption);
+
+    this.identitiesList.appendChild(identity);
   }
 
   render() {
@@ -109,6 +148,11 @@ class AccountLine extends HTMLDivElement {
 
     if (lastError) this.error.textContent = lastError;
     else this.error.textContent = null;
+
+    let identities = JSON.parse(this.getAttribute("identities"));
+    for (let identity of identities) {
+      this.addIdentity(identity.id, identity.label);
+    }
   }
 
   syncCheckboxChanged(e) {
