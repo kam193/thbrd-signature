@@ -46,8 +46,7 @@ async function loadAccountList() {
     for (let identity of acc.identities) {
       let label = `${identity.name} <${identity.email}>`;
       if (identity.label) label += ` (${identity.label})`;
-      identities.push({id: identity.id, label: label});
-      console.log(identity);
+      identities.push({ id: identity.id, label: label });
     }
     line.setAttribute("identities", JSON.stringify(identities));
 
@@ -121,14 +120,36 @@ class AccountLine extends HTMLDivElement {
 
     let gmSignature = document.createElement("select");
     gmSignature.classList.add("browser-style", "nobottom", "gm-signatures");
+    gmSignature.disabled = !this.isEnabled;
     identitySyncWith.appendChild(gmSignature);
 
-    let gmSignatureOption = document.createElement("option");
-    gmSignatureOption.textContent = id;
-    gmSignatureOption.value = "gm-signature";
-    gmSignature.appendChild(gmSignatureOption);
+    this.aliases.forEach((alias) => {
+      let option = document.createElement("option");
+      option.value = alias.email;
+      option.textContent = `${alias.name} <${alias.email}>`;
+      gmSignature.appendChild(option);
+    });
 
     this.identitiesList.appendChild(identity);
+  }
+
+  async loadGmailAliases() {
+    this.aliases = [{ name: "", email: NONE_EMAIL }];
+    if (!this.isEnabled) return;
+
+    let syncable = getOrCreateAccountSyncable(this.getAttribute("account-id"));
+    this.aliases = await getUserSendAs(syncable); // TODO: catch errors
+    console.log(this.aliases);
+  }
+
+  async renderIdentities() {
+    this.identitiesList.childNodes.forEach((n) => n.remove());
+
+    await this.loadGmailAliases();
+    let identities = JSON.parse(this.getAttribute("identities"));
+    for (let identity of identities) {
+      this.addIdentity(identity.id, identity.label);
+    }
   }
 
   render() {
@@ -138,6 +159,7 @@ class AccountLine extends HTMLDivElement {
     let gmailEmail = this.getAttribute("gmail-email");
     let lastError = this.getAttribute("last-error");
 
+    this.isEnabled = syncEnabled;
     this.checkbox.checked = syncEnabled;
     this.accountName.textContent = accountName;
     this.login.disabled = !syncEnabled;
@@ -149,10 +171,7 @@ class AccountLine extends HTMLDivElement {
     if (lastError) this.error.textContent = lastError;
     else this.error.textContent = null;
 
-    let identities = JSON.parse(this.getAttribute("identities"));
-    for (let identity of identities) {
-      this.addIdentity(identity.id, identity.label);
-    }
+    this.renderIdentities();
   }
 
   syncCheckboxChanged(e) {

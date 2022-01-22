@@ -1,4 +1,5 @@
 const VERSION = 2;
+const NONE_EMAIL = "none"
 
 function updateSyncable(syncable) {
   acc = preferences.getPref("syncAccounts");
@@ -17,6 +18,22 @@ async function getUserSignature(syncable) {
   return signature;
 }
 
+async function getUserSendAs(syncable) {
+  let dataUrl = "https://www.googleapis.com/gmail/v1/users/me/settings/sendAs";
+  let token = await refreshAccessToken(syncable.refreshToken);
+  let settings = await makeRequest(token, dataUrl);
+  let sendAs = [];
+  settings.sendAs.forEach((alias) => {
+    sendAs.push({
+      email: alias.sendAsEmail,
+      name: alias.displayName,
+      signature: alias.signature,
+      isDefault: alias.isDefault,
+    });
+  });
+  return sendAs;
+}
+
 async function syncAccounts() {
   let syncableAccounts = preferences.getPref("syncAccounts");
   let failed = [];
@@ -28,7 +45,7 @@ async function syncAccounts() {
     try {
       let signature = await getUserSignature(syncable);
       let account = await browser.accounts.get(account_id);
-      let identity = {signature: signature, signatureIsPlainText: false};
+      let identity = { signature: signature, signatureIsPlainText: false };
       await browser.identities.update(account.identities[0].id, identity);
       syncable.lastSync = new Date();
       syncable.lastError = null;
