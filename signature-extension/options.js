@@ -1,3 +1,9 @@
+function IdentitySyncable(identityId, syncEnabled, gmailSendAsEmail) {
+  this.identityId = identityId;
+  this.syncEnabled = syncEnabled;
+  this.gmailSendAsEmail = gmailSendAsEmail;
+}
+
 function AccountSyncable(
   accountId,
   syncEnabled,
@@ -14,6 +20,7 @@ function AccountSyncable(
   this.gmailEmail = gmailEmail;
   this.lastError = lastError;
   this.refreshToken = refreshToken;
+  this.identitiesSyncable = {};
 }
 
 function getOrCreateAccountSyncable(account_id) {
@@ -105,7 +112,7 @@ class AccountLine extends HTMLDivElement {
     this.appendChild(this.identitiesList);
   }
 
-  addIdentity(id, label) {
+  addIdentity(id, label, syncable) {
     let identity = document.createElement("div");
     identity.classList.add("identity-item");
 
@@ -121,12 +128,14 @@ class AccountLine extends HTMLDivElement {
     let gmSignature = document.createElement("select");
     gmSignature.classList.add("browser-style", "nobottom", "gm-signatures");
     gmSignature.disabled = !this.isEnabled;
+    gmSignature.addEventListener("change", (e) => this.gmailAliasChanged(id, e));
     identitySyncWith.appendChild(gmSignature);
 
     this.aliases.forEach((alias) => {
       let option = document.createElement("option");
       option.value = alias.email;
       option.textContent = `${alias.name} <${alias.email}>`;
+      if (alias.email === syncable.gmailSendAsEmail) option.selected = true;
       gmSignature.appendChild(option);
     });
 
@@ -139,16 +148,20 @@ class AccountLine extends HTMLDivElement {
 
     let syncable = getOrCreateAccountSyncable(this.getAttribute("account-id"));
     this.aliases = await getUserSendAs(syncable); // TODO: catch errors
-    console.log(this.aliases);
+    this.aliases.push({ name: "", email: NONE_EMAIL });
   }
 
   async renderIdentities() {
     this.identitiesList.childNodes.forEach((n) => n.remove());
-
     await this.loadGmailAliases();
+    let identitiesSync = getOrCreateAccountSyncable(
+      this.getAttribute("account-id")
+    ).identitiesSyncable || {};
+
     let identities = JSON.parse(this.getAttribute("identities"));
     for (let identity of identities) {
-      this.addIdentity(identity.id, identity.label);
+      let syncable = identitiesSync[identity.id] || new IdentitySyncable(identity.id, false, null);
+      this.addIdentity(identity.id, identity.label, syncable);
     }
   }
 
@@ -180,6 +193,11 @@ class AccountLine extends HTMLDivElement {
     acc.syncEnabled = this.checkbox.checked;
     updateSyncable(acc);
     this.render();
+  }
+
+  gmailAliasChanged(identityId, e) {
+    console.log(e.target.value);
+    console.log(identityId);
   }
 
   async connectButtonClicked() {
