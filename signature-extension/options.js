@@ -147,16 +147,17 @@ class AccountLine extends HTMLDivElement {
     if (!this.isEnabled) return;
 
     let syncable = getOrCreateAccountSyncable(this.getAttribute("account-id"));
-    this.aliases = await getUserSendAs(syncable); // TODO: catch errors
-    this.aliases.push({ name: "", email: NONE_EMAIL });
+    let remoteAliases = await getUserSendAs(syncable); // TODO: catch errors
+    remoteAliases.map((x) => {
+      this.aliases.push(x);
+    });
   }
 
   async renderIdentities() {
     this.identitiesList.childNodes.forEach((n) => n.remove());
     await this.loadGmailAliases();
-    let identitiesSync = getOrCreateAccountSyncable(
-      this.getAttribute("account-id")
-    ).identitiesSyncable || {};
+    let identitiesSync =
+      getOrCreateAccountSyncable(this.getAttribute("account-id")).identitiesSyncable || {};
 
     let identities = JSON.parse(this.getAttribute("identities"));
     for (let identity of identities) {
@@ -196,8 +197,22 @@ class AccountLine extends HTMLDivElement {
   }
 
   gmailAliasChanged(identityId, e) {
-    console.log(e.target.value);
-    console.log(identityId);
+    let accSyncable = getOrCreateAccountSyncable(this.getAttribute("account-id"));
+    let identitiesSyncable = accSyncable.identitiesSyncable;
+    if (!identitiesSyncable) {
+      identitiesSyncable = {};
+      accSyncable.identitiesSyncable = identitiesSyncable;
+    }
+
+    let identitySyncable = identitiesSyncable[identityId];
+    if (!identitySyncable) {
+      identitySyncable = new IdentitySyncable(identityId, false, null);
+      identitiesSyncable[identityId] = identitySyncable;
+    }
+
+    identitySyncable.gmailSendAsEmail = e.target.value;
+    updateSyncable(accSyncable);
+    this.render();
   }
 
   async connectButtonClicked() {

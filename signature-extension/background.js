@@ -1,5 +1,5 @@
 const VERSION = 2;
-const NONE_EMAIL = "none"
+const NONE_EMAIL = "none";
 
 function updateSyncable(syncable) {
   acc = preferences.getPref("syncAccounts");
@@ -43,10 +43,32 @@ async function syncAccounts() {
       continue;
     }
     try {
-      let signature = await getUserSignature(syncable);
-      let account = await browser.accounts.get(account_id);
-      let identity = { signature: signature, signatureIsPlainText: false };
-      await browser.identities.update(account.identities[0].id, identity);
+      let gmailSendAs = await getUserSendAs(syncable);
+      let aliasesByEmail = {};
+      gmailSendAs.forEach((alias) => {
+        aliasesByEmail[alias.email] = alias;
+      });
+
+      let identities = syncable.identitiesSyncable || {};
+      console.log(identities);
+      Object.values(identities).forEach((identity) => {
+        if (identity.gmailSendAsEmail != NONE_EMAIL) {
+          let alias = aliasesByEmail[identity.gmailSendAsEmail];
+          if (alias) {
+            console.log(
+              `Syncing identity ${identity.identityId} with remote ${identity.gmailSendAsEmail}`
+            );
+            let identitySettings = { signature: alias.signature, signatureIsPlainText: false };
+            // TODO: handle errors - this is async call
+            browser.identities.update(identity.identityId, identitySettings);
+          } else {
+            console.error(
+              `Could not find remote alias ${alias.gmailSendAsEmail} for identity ${identity.identityId}`
+            );
+          }
+        }
+      });
+
       syncable.lastSync = new Date();
       syncable.lastError = null;
     } catch (error) {
