@@ -1,43 +1,18 @@
-function IdentitySyncable(identityId, syncEnabled, gmailSendAsEmail) {
-  this.identityId = identityId;
-  this.syncEnabled = syncEnabled;
-  this.gmailSendAsEmail = gmailSendAsEmail;
-}
-
-function AccountSyncable(
-  accountId,
-  syncEnabled,
-  lastSync,
-  gmailId,
-  gmailEmail,
-  lastError,
-  refreshToken
-) {
-  this.accountId = accountId;
-  this.syncEnabled = syncEnabled;
-  this.lastSync = lastSync;
-  this.gmailId = gmailId;
-  this.gmailEmail = gmailEmail;
-  this.lastError = lastError;
-  this.refreshToken = refreshToken;
-  this.identitiesSyncable = {};
-}
-
-function getOrCreateAccountSyncable(account_id) {
+async function getOrCreateAccountSyncable(account_id) {
   acc = preferences.getPref("syncAccounts");
   if (!(account_id in acc)) {
     acc[account_id] = new AccountSyncable(account_id, false, null, null);
     preferences.setPref("syncAccounts", acc);
   }
-  return acc[account_id];
+  return await ensureDefaultIdentitySyncable(acc[account_id]);
 }
 
 async function loadAccountList() {
   let listPlaceholder = document.querySelector("#signatureAccountList");
   listPlaceholder.querySelectorAll("*").forEach((n) => n.remove());
 
-  let addToList = (acc) => {
-    let syncable = getOrCreateAccountSyncable(acc.id);
+  let addToList = async (acc) => {
+    let syncable = await getOrCreateAccountSyncable(acc.id);
     let line = document.createElement("div", { is: "account-line" });
 
     line.setAttribute("sync-enabled", syncable.syncEnabled);
@@ -62,7 +37,7 @@ async function loadAccountList() {
 
   accounts = await browser.accounts.list();
   accounts = accounts.filter((account) => account.type !== "none");
-  accounts.map((x) => addToList(x));
+  accounts.map(async (x) => await addToList(x));
 }
 
 class AccountLine extends HTMLDivElement {
@@ -74,8 +49,8 @@ class AccountLine extends HTMLDivElement {
     this.checkbox = document.createElement("input");
     this.checkbox.type = "checkbox";
     this.checkbox.name = "syncEnabled";
-    this.checkbox.addEventListener("click", (e) => {
-      this.syncCheckboxChanged(e);
+    this.checkbox.addEventListener("click", async (e) => {
+      await this.syncCheckboxChanged(e);
     });
     checkboxContainer.appendChild(this.checkbox);
     this.appendChild(checkboxContainer);
@@ -128,7 +103,7 @@ class AccountLine extends HTMLDivElement {
     let gmSignature = document.createElement("select");
     gmSignature.classList.add("browser-style", "nobottom", "gm-signatures");
     gmSignature.disabled = !this.isEnabled;
-    gmSignature.addEventListener("change", (e) => this.gmailAliasChanged(id, e));
+    gmSignature.addEventListener("change", async (e) => await this.gmailAliasChanged(id, e));
     identitySyncWith.appendChild(gmSignature);
 
     this.aliases.forEach((alias) => {
@@ -146,7 +121,7 @@ class AccountLine extends HTMLDivElement {
     this.aliases = [{ name: "", email: NONE_EMAIL }];
     if (!this.isEnabled) return;
 
-    let syncable = getOrCreateAccountSyncable(this.getAttribute("account-id"));
+    let syncable = await getOrCreateAccountSyncable(this.getAttribute("account-id"));
     let remoteAliases = await getUserSendAs(syncable); // TODO: catch errors
     remoteAliases.map((x) => {
       this.aliases.push(x);
@@ -156,12 +131,12 @@ class AccountLine extends HTMLDivElement {
   async renderIdentities() {
     this.identitiesList.childNodes.forEach((n) => n.remove());
     await this.loadGmailAliases();
-    let identitiesSync =
-      getOrCreateAccountSyncable(this.getAttribute("account-id")).identitiesSyncable || {};
+    let identitiesSync = (await getOrCreateAccountSyncable(this.getAttribute("account-id")))
+      .identitiesSyncable;
 
     let identities = JSON.parse(this.getAttribute("identities"));
     for (let identity of identities) {
-      let syncable = identitiesSync[identity.id] || new IdentitySyncable(identity.id, false, null);
+      let syncable = identitiesSync[identity.id] || new IdentitySyncable(identity.id, null);
       this.addIdentity(identity.id, identity.label, syncable);
     }
   }
@@ -188,16 +163,16 @@ class AccountLine extends HTMLDivElement {
     this.renderIdentities();
   }
 
-  syncCheckboxChanged(e) {
+  async syncCheckboxChanged(e) {
     this.setAttribute("sync-enabled", this.checkbox.checked);
-    acc = getOrCreateAccountSyncable(this.getAttribute("account-id"));
+    acc = await getOrCreateAccountSyncable(this.getAttribute("account-id"));
     acc.syncEnabled = this.checkbox.checked;
     updateSyncable(acc);
     this.render();
   }
 
-  gmailAliasChanged(identityId, e) {
-    let accSyncable = getOrCreateAccountSyncable(this.getAttribute("account-id"));
+  async gmailAliasChanged(identityId, e) {
+    let accSyncable = await getOrCreateAccountSyncable(this.getAttribute("account-id"));
     let identitiesSyncable = accSyncable.identitiesSyncable;
     if (!identitiesSyncable) {
       identitiesSyncable = {};
@@ -206,7 +181,7 @@ class AccountLine extends HTMLDivElement {
 
     let identitySyncable = identitiesSyncable[identityId];
     if (!identitySyncable) {
-      identitySyncable = new IdentitySyncable(identityId, false, null);
+      identitySyncable = new IdentitySyncable(identityId, null);
       identitiesSyncable[identityId] = identitySyncable;
     }
 
@@ -216,7 +191,7 @@ class AccountLine extends HTMLDivElement {
   }
 
   async connectButtonClicked() {
-    acc = getOrCreateAccountSyncable(this.getAttribute("account-id"));
+    acc = await getOrCreateAccountSyncable(this.getAttribute("account-id"));
     let userData = await connectWithGoogle();
     acc.gmailEmail = userData.email;
     acc.gmailId = userData.sub;

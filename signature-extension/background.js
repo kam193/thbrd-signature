@@ -1,6 +1,30 @@
 const VERSION = 2;
 const NONE_EMAIL = "none";
 
+function IdentitySyncable(identityId, gmailSendAsEmail) {
+  this.identityId = identityId;
+  this.gmailSendAsEmail = gmailSendAsEmail;
+}
+
+function AccountSyncable(
+  accountId,
+  syncEnabled,
+  lastSync,
+  gmailId,
+  gmailEmail,
+  lastError,
+  refreshToken
+) {
+  this.accountId = accountId;
+  this.syncEnabled = syncEnabled;
+  this.lastSync = lastSync;
+  this.gmailId = gmailId;
+  this.gmailEmail = gmailEmail;
+  this.lastError = lastError;
+  this.refreshToken = refreshToken;
+  this.identitiesSyncable = {};
+}
+
 function updateSyncable(syncable) {
   acc = preferences.getPref("syncAccounts");
   acc[syncable.accountId] = syncable;
@@ -20,18 +44,50 @@ async function getUserSignature(syncable) {
 
 async function getUserSendAs(syncable) {
   let dataUrl = "https://www.googleapis.com/gmail/v1/users/me/settings/sendAs";
-  let token = await refreshAccessToken(syncable.refreshToken);
-  let settings = await makeRequest(token, dataUrl);
-  let sendAs = [];
-  settings.sendAs.forEach((alias) => {
-    sendAs.push({
-      email: alias.sendAsEmail,
-      name: alias.displayName,
-      signature: alias.signature,
-      isDefault: alias.isDefault,
+  return refreshAccessToken(syncable.refreshToken)
+    .then(async (token) =>
+      makeRequest(token, dataUrl).then((settings) => {
+        let sendAs = [];
+        settings.sendAs.forEach((alias) => {
+          sendAs.push({
+            email: alias.sendAsEmail,
+            name: alias.displayName,
+            signature: alias.signature,
+            isDefault: alias.isDefault,
+          });
+        });
+        return sendAs;
+      })
+    )
+    .catch((error) => {
+      console.error(error);
+      return [];
     });
-  });
-  return sendAs;
+}
+
+async function ensureDefaultIdentitySyncable(accountSyncable) {
+  // For given account syncable, if connected with a Gmail account,
+  // create an identities syncable dictionary with sync enabled
+  // for default identitiy and Gmail's alias
+  if (accountSyncable.identitiesSyncable || !accountSyncable.syncEnabled) {
+    return accountSyncable;
+  }
+
+  identity = await browser.identities.getDefault(accountSyncable.accountId);
+  sendAses = await getUserSendAs(accountSyncable);
+  defaultSendAs = sendAses.find((x) => x.isDefault);
+
+  if (!defaultSendAs) {
+    console.error("Could not find default send-as for account " + accountSyncable.accountId);
+    return accountSyncable;
+  }
+
+  accountSyncable.identitiesSyncable = {};
+  accountSyncable.identitiesSyncable[identity.id] = new IdentitySyncable(
+    identity.id,
+    defaultSendAs.email
+  );
+  return accountSyncable;
 }
 
 async function syncAccounts() {
@@ -49,8 +105,8 @@ async function syncAccounts() {
         aliasesByEmail[alias.email] = alias;
       });
 
+      await ensureDefaultIdentitySyncable(syncable);
       let identities = syncable.identitiesSyncable || {};
-      console.log(identities);
       Object.values(identities).forEach((identity) => {
         if (identity.gmailSendAsEmail != NONE_EMAIL) {
           let alias = aliasesByEmail[identity.gmailSendAsEmail];
