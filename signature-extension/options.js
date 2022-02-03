@@ -105,6 +105,10 @@ class AccountLine extends HTMLDivElement {
     gmSignature.disabled = !this.isEnabled;
     gmSignature.addEventListener("change", async (e) => await this.gmailAliasChanged(id, e));
     identitySyncWith.appendChild(gmSignature);
+    let hint = document.createElement("optgroup");
+    hint.classList.add("hint");
+    hint.label = "Please select a Gmail alias (send as):";
+    gmSignature.appendChild(hint);
 
     this.aliases.forEach((alias) => {
       let option = document.createElement("option");
@@ -128,8 +132,12 @@ class AccountLine extends HTMLDivElement {
     });
   }
 
-  async renderIdentities() {
-    this.identitiesList.childNodes.forEach((n) => n.remove());
+  async renderIdentitiesIfEnabled() {
+    while (this.identitiesList.lastChild) {
+      this.identitiesList.removeChild(this.identitiesList.lastChild);
+    }
+    if (!this.isEnabled) return;
+
     await this.loadGmailAliases();
     let identitiesSync = (await getOrCreateAccountSyncable(this.getAttribute("account-id")))
       .identitiesSyncable;
@@ -160,7 +168,7 @@ class AccountLine extends HTMLDivElement {
     if (lastError) this.error.textContent = lastError;
     else this.error.textContent = null;
 
-    this.renderIdentities();
+    this.renderIdentitiesIfEnabled();
   }
 
   async syncCheckboxChanged(e) {

@@ -39,7 +39,7 @@ h3 {
 }
 
 .identity-item:hover {
-  font-weight: bold;
+  background-color: rgba(12, 12, 13, 0.1);
 }
 
 .text-shortcut {
@@ -148,9 +148,20 @@ input.wide {
   vertical-align: bottom;
 }
 
+.identity-name {
+  font-size: 90%;
+  margin: auto 0;
+}
+
 .identity-item {
   display: flex;
   justify-content: space-between;
+  padding: 2px 15px 2px 26px;
+  border-radius: 30px;
+}
+
+select.gm-signatures {
+	font-size: 90%;
 }
 
 input:disabled {
