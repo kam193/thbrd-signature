@@ -140,7 +140,7 @@ class AccountLine extends HTMLDivElement {
 
     await this.loadGmailAliases();
     let identitiesSync = (await getOrCreateAccountSyncable(this.getAttribute("account-id")))
-      .identitiesSyncable;
+      .identitiesSyncable || [];
 
     let identities = JSON.parse(this.getAttribute("identities"));
     for (let identity of identities) {

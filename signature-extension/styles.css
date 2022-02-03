@@ -151,6 +151,12 @@ input.wide {
 .identity-name {
   font-size: 90%;
   margin: auto 0;
+  max-width: 50%;
+}
+
+.identity-sync-with {
+  margin: auto 0;
+  max-width: 50%;
 }
 
 .identity-item {
