@@ -94,6 +94,7 @@ async function syncAccounts() {
   let syncableAccounts = preferences.getPref("syncAccounts");
   let failed = [];
   for (const [account_id, syncable] of Object.entries(syncableAccounts)) {
+    let error = "";
     if (!syncable.syncEnabled) {
       syncable.lastError = null;
       continue;
@@ -118,12 +119,14 @@ async function syncAccounts() {
             // TODO: handle errors - this is async call
             browser.identities.update(identity.identityId, identitySettings);
           } else {
-            console.error(
-              `Could not find remote alias ${alias.gmailSendAsEmail} for identity ${identity.identityId}`
-            );
+            error = `Could not find alias ${identity.gmailSendAsEmail} for identity ${identity.identityId}`;
+            console.error(error);
           }
         }
       });
+
+      // After trying sync all identities, throw last error if any
+      if (error) throw error;
 
       syncable.lastSync = new Date();
       syncable.lastError = null;

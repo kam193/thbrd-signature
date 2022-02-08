@@ -118,6 +118,14 @@ class AccountLine extends HTMLDivElement {
       gmSignature.appendChild(option);
     });
 
+    if (syncable.gmailSendAsEmail && !this.aliases.find((x) => x.email === syncable.gmailSendAsEmail)) {
+      let option = document.createElement("option");
+      option.value = syncable.gmailSendAsEmail;
+      option.textContent = `(!) Not found online alias <${syncable.gmailSendAsEmail}>`;
+      option.selected = true;
+      gmSignature.appendChild(option);
+    }
+
     this.identitiesList.appendChild(identity);
   }
 
