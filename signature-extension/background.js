@@ -31,17 +31,6 @@ function updateSyncable(syncable) {
   preferences.setPref("syncAccounts", acc);
 }
 
-async function getUserSignature(syncable) {
-  let dataUrl = "https://www.googleapis.com/gmail/v1/users/me/settings/sendAs";
-  let token = await refreshAccessTokenWithErrorCatching(syncable.refreshToken);
-  let settings = await makeRequest(token, dataUrl);
-  let signature = null;
-  settings.sendAs.forEach((alias) => {
-    if (alias.isDefault) signature = alias.signature;
-  });
-  return signature;
-}
-
 // Based on original from api.js with improved error handling
 function refreshAccessTokenWithErrorCatching(refreshToken) {
   const data = `${REFRESH_DATA}&refresh_token=${refreshToken}`;
