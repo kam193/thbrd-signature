@@ -1,4 +1,4 @@
-const VERSION = 2;
+const VERSION = 3;
 const NONE_EMAIL = "none";
 
 function IdentitySyncable(identityId, gmailSendAsEmail) {
