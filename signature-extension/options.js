@@ -133,7 +133,7 @@ class AccountLine extends HTMLDivElement {
     if (!this.isEnabled) return;
 
     let syncable = await getOrCreateAccountSyncable(this.getAttribute("account-id"));
-    let remoteAliases = await getUserSendAs(syncable); // TODO: catch errors
+    let remoteAliases = await getUserSendAs(syncable);
     remoteAliases.map((x) => {
       this.aliases.push(x);
     });

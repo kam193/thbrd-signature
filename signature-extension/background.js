@@ -138,7 +138,6 @@ async function syncAccounts() {
               `Syncing identity ${identity.identityId} with remote ${identity.gmailSendAsEmail}`
             );
             let identitySettings = { signature: alias.signature, signatureIsPlainText: false };
-            // TODO: handle errors - this is async call
             browser.identities.update(identity.identityId, identitySettings);
           } else {
             error = `Could not find alias ${identity.gmailSendAsEmail} for identity ${identity.identityId}`;
