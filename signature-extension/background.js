@@ -33,7 +33,7 @@ function updateSyncable(syncable) {
 
 async function getUserSignature(syncable) {
   let dataUrl = "https://www.googleapis.com/gmail/v1/users/me/settings/sendAs";
-  let token = await refreshAccessToken(syncable.refreshToken);
+  let token = await refreshAccessTokenWithErrorCatching(syncable.refreshToken);
   let settings = await makeRequest(token, dataUrl);
   let signature = null;
   settings.sendAs.forEach((alias) => {
@@ -42,27 +42,49 @@ async function getUserSignature(syncable) {
   return signature;
 }
 
+// Based on original from api.js with improved error handling
+function refreshAccessTokenWithErrorCatching(refreshToken) {
+  const data = `${REFRESH_DATA}&refresh_token=${refreshToken}`;
+  const refreshRequest = new Request(TOKEN_URL, {
+    method: "POST",
+    body: addCredentialQuery(data),
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+  return new Promise((resolve, reject) => {
+    fetch(refreshRequest).then((response) => {
+      if (response.status != 200) {
+        reject("Cannot refresh access token");
+      }
+      response.json().then((json) => {
+        resolve(json.access_token);
+      });
+    }).catch((error) => reject(error));
+  });
+}
+
 async function getUserSendAs(syncable) {
   let dataUrl = "https://www.googleapis.com/gmail/v1/users/me/settings/sendAs";
-  return refreshAccessToken(syncable.refreshToken)
-    .then(async (token) =>
-      makeRequest(token, dataUrl).then((settings) => {
-        let sendAs = [];
-        settings.sendAs.forEach((alias) => {
-          sendAs.push({
-            email: alias.sendAsEmail,
-            name: alias.displayName,
-            signature: alias.signature,
-            isDefault: alias.isDefault,
-          });
-        });
-        return sendAs;
-      })
-    )
-    .catch((error) => {
-      console.error(error);
-      return [];
+  try {
+    let token = await refreshAccessTokenWithErrorCatching(syncable.refreshToken);
+    let settings = await makeRequest(token, dataUrl);
+    
+    let sendAs = [];
+    settings.sendAs.forEach((alias) => {
+      sendAs.push({
+        email: alias.sendAsEmail,
+        name: alias.displayName,
+        signature: alias.signature,
+        isDefault: alias.isDefault,
+      });
     });
+    return sendAs;
+  } catch (error) {
+    console.error(`Cannot get send-as for ${syncable.gmailEmail}`);
+    console.error(error);
+    return [];
+  }
 }
 
 async function ensureDefaultIdentitySyncable(accountSyncable) {
