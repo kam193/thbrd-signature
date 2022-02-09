@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Signature sync for Gmail",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "author": "Kamil Mańkowski",
   "description": "Sync your signatures with Gmail accounts",
   "homepage_url": "https://thbrd-signature.kam193.eu/",

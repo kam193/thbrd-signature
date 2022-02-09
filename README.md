@@ -12,6 +12,8 @@ In order to sync a signature, go to the settings page, enable an account and
 connect it with Gmail. Signatures are downloaded on every startup or when you
 click in settings.
 
+Multiple identities and Send-As aliases in Gmail are supported.
+
 ## How to install
 
 After installation, open add-on preferences and configure it.
