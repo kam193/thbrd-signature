@@ -42,14 +42,16 @@ function refreshAccessTokenWithErrorCatching(refreshToken) {
     },
   });
   return new Promise((resolve, reject) => {
-    fetch(refreshRequest).then((response) => {
-      if (response.status != 200) {
-        reject("Cannot refresh access token");
-      }
-      response.json().then((json) => {
-        resolve(json.access_token);
-      });
-    }).catch((error) => reject(error));
+    fetch(refreshRequest)
+      .then((response) => {
+        if (response.status != 200) {
+          reject("Cannot refresh access token");
+        }
+        response.json().then((json) => {
+          resolve(json.access_token);
+        });
+      })
+      .catch((error) => reject(error));
   });
 }
 
@@ -58,7 +60,7 @@ async function getUserSendAs(syncable) {
   try {
     let token = await refreshAccessTokenWithErrorCatching(syncable.refreshToken);
     let settings = await makeRequest(token, dataUrl);
-    
+
     let sendAs = [];
     settings.sendAs.forEach((alias) => {
       sendAs.push({
@@ -111,6 +113,12 @@ async function syncAccounts() {
       continue;
     }
     try {
+      let account = await browser.accounts.get(account_id, false);
+      if (account === null) {
+        console.warn(`The account ${account_id} doesn't exist anymore. Skipping sync...`);
+        continue;
+      }
+
       let gmailSendAs = await getUserSendAs(syncable);
       let aliasesByEmail = {};
       gmailSendAs.forEach((alias) => {
@@ -119,8 +127,12 @@ async function syncAccounts() {
 
       await ensureDefaultIdentitySyncable(syncable);
       let identities = syncable.identitiesSyncable || {};
-      Object.values(identities).forEach((identity) => {
-        if (identity.gmailSendAsEmail != NONE_EMAIL) {
+
+      for (const identity of Object.values(identities)) {
+        let thunderbirdIdentity = await browser.identities.get(identity.identityId);
+        if (thunderbirdIdentity === null) {
+          console.warn(`The identity ${account_id} doesn't exist anymore. Skipping sync...`);
+        } else if (identity.gmailSendAsEmail != NONE_EMAIL) {
           let alias = aliasesByEmail[identity.gmailSendAsEmail];
           if (alias) {
             console.log(
@@ -133,7 +145,7 @@ async function syncAccounts() {
             console.error(error);
           }
         }
-      });
+      }
 
       // After trying sync all identities, throw last error if any
       if (error) throw error;
