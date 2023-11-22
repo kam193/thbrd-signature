@@ -33,10 +33,24 @@ the add-on by Thunderbird. Signatures are saved in Thunderbird accounts' prefere
 There is no other services involved. No telemetry, no cloud storage. The add-on
 never sends your data outside.
 
+## Protection mechanisms
+
+Your sensitive data are protected by using appropriate security mechanisms. All information
+are stored using the Thunderbird's built-in mechanisms isolating confidential information from
+other add-ons; communication with Google APIs occurs exclusively using encrypted HTTPS
+protocol. The add-on never sends or saves your data outside local Thunderbird instance,
+and data not needed anymore are immediately deleted.
+
 ## Limited use
 
 Signature sync for Gmail use and transfer to any other app of information received
 from Google APIs will adhere to [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy#additional_requirements_for_specific_api_scopes),
 including the Limited Use requirements.
 
-Last update: 2021-04-30
+----
+
+Last update: 2023-11-22
+
+Changes:
+- 2023-11-22: Added "Protection mechanisms" section.
+- 2021-04-30: Initial version.
