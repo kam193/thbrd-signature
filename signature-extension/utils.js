@@ -1,12 +1,3 @@
-function randomToken() {
-  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let token = "";
-  for (let i = 0; i < 50; i++) {
-    token += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return token;
-}
-
 function openError(page, message) {
   let dest = page;
   if (message) dest = `${page}?message=${btoa(message)}`;

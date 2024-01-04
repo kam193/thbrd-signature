@@ -102,7 +102,7 @@ function getUserData(accessToken) {
 }
 
 function connectWithGoogle() {
-  const token = randomToken();
+  const token = window.crypto.randomUUID();
   const handleResponse = (redirectUrl) => {
     const code = extractCode(redirectUrl);
     if (!code) {
